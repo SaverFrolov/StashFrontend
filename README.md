@@ -1,6 +1,6 @@
-# Universal Personal Inbox — frontend
+# Stash — universal personal inbox (frontend)
 
-A universal "personal inbox": save links, text notes, PDF/DOCX files and voice notes from a browser, desktop or phone into one store. The system keeps the original, extracts text, and an AI model adds an annotation and tags. The UI captures, organizes and retrieves — it is not a chatbot.
+**Stash** is a universal "personal inbox": save links, text notes, PDF/DOCX files and voice notes from a browser, desktop or phone into one store. The system keeps the original, extracts text, and an AI model adds an annotation and tags. The UI captures, organizes and retrieves — it is not a chatbot.
 
 Built from the specification in `frontend_v2.docx`. Backend is out of scope: the app talks to an `ApiClient` interface with a full-featured `MockApi` (in-memory + localStorage, simulated processing pipeline).
 
@@ -88,5 +88,5 @@ The web app is a PWA (`vite-plugin-pwa`): install prompt banner, home-screen sho
 - **Auth**: MockApi accepts any credentials and persists a fake session in localStorage; `RequireAuth` redirects to `/login` and preserves the target path.
 - **Item detail on wide screens**: `/items/:id` renders the feed (480 px) + detail split at ≥1280 px; below that it is a full page with a back button.
 - **Export**: MockApi produces a JSON or Markdown download (no real ZIP packaging of originals — originals stay referenced by URL inside the JSON).
-- **`APP_NAME`**: `"Inbox"` from `packages/api-client/src/config.ts`.
+- **`APP_NAME`**: `"Stash"` from `packages/api-client/src/config.ts`.
 - **Keyboard shortcuts** (M14 sheet): `⌘K/Ctrl+K` palette, `?` shortcuts sheet; the sheet also lists composer shortcuts (Enter/Shift+Enter).

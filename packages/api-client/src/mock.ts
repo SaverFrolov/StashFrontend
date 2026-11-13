@@ -788,10 +788,10 @@ export class MockApi implements ApiClient {
           return lines.join("\n");
         })
         .join("\n\n---\n\n");
-      return { blob: new Blob([md], { type: "text/markdown" }), filename: "inbox-export.md" };
+      return { blob: new Blob([md], { type: "text/markdown" }), filename: "stash-export.md" };
     }
     const json = JSON.stringify({ exportedAt: new Date().toISOString(), items: stripped }, null, 2);
-    return { blob: new Blob([json], { type: "application/json" }), filename: "inbox-export.json" };
+    return { blob: new Blob([json], { type: "application/json" }), filename: "stash-export.json" };
   }
 
   async usage(): Promise<UsageInfo> {

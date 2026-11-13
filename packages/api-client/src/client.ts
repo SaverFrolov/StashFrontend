@@ -294,7 +294,7 @@ export class RestApi implements ApiClient {
     if (!res.ok) throw new Error(`API error ${res.status}`);
     const blob = await res.blob();
     const ext = options.format === "markdown" ? "md" : "zip";
-    return { blob, filename: `inbox-export.${ext}` };
+    return { blob, filename: `stash-export.${ext}` };
   }
 
   usage(): Promise<UsageInfo> {
