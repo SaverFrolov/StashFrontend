@@ -5,12 +5,12 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: "save-page",
-      title: "Save page to Inbox",
+      title: "Save page to Stash",
       contexts: ["page", "link"],
     });
     chrome.contextMenus.create({
       id: "save-selection",
-      title: "Save selection to Inbox",
+      title: "Save selection to Stash",
       contexts: ["selection"],
     });
   });

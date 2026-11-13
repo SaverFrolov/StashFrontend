@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg", "apple-touch-icon.png"],
       manifest: {
-        name: "Inbox — universal personal inbox",
-        short_name: "Inbox",
+        name: "Stash — universal personal inbox",
+        short_name: "Stash",
         description: "Capture links, notes, files and voice notes into one personal store.",
         lang: "ru",
         display: "standalone",
