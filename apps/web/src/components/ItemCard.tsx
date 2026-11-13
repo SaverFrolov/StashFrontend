@@ -8,6 +8,8 @@ import {
   MoreHorizontal,
   ExternalLink,
   Music,
+  Sheet,
+  Video,
   Tag as TagIcon,
 } from "lucide-react";
 import { Chip, Menu, MenuContent, MenuItem, MenuTrigger, StatusChip, TagChip, cn, statusLabelKey } from "@inbox/ui";
@@ -20,6 +22,10 @@ export const typeIcon = (type: Item["type"], size = 16) => {
       return <Link2 size={size} strokeWidth={1.5} aria-hidden />;
     case "audio":
       return <Music size={size} strokeWidth={1.5} aria-hidden />;
+    case "video":
+      return <Video size={size} strokeWidth={1.5} aria-hidden />;
+    case "xlsx":
+      return <Sheet size={size} strokeWidth={1.5} aria-hidden />;
     case "pdf":
     case "docx":
       return <FileIcon size={size} strokeWidth={1.5} aria-hidden />;

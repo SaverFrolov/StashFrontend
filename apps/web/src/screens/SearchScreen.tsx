@@ -10,11 +10,13 @@ import { useApi } from "../state/api";
 import { ItemCard } from "../components/ItemCard";
 import { useModals } from "../modals/ModalProvider";
 
-const TYPE_OPTIONS: Array<{ value: ItemType | "any"; labelKey: string }> = [
+type TypeFilter = ItemType | "any" | "file";
+
+const TYPE_OPTIONS: Array<{ value: TypeFilter; labelKey: string }> = [
   { value: "any", labelKey: "feed.filterAll" },
   { value: "link", labelKey: "feed.filterLinks" },
   { value: "text", labelKey: "feed.filterNotes" },
-  { value: "pdf", labelKey: "feed.filterFiles" },
+  { value: "file", labelKey: "feed.filterFiles" },
   { value: "audio", labelKey: "feed.filterAudio" },
 ];
 
@@ -28,7 +30,7 @@ export function SearchScreen() {
   const [debounced, setDebounced] = useState("");
   const [mode, setMode] = useState<SearchMode>("smart");
   const [showFilters, setShowFilters] = useState(false);
-  const [type, setType] = useState<ItemType | "any">("any");
+  const [type, setType] = useState<TypeFilter>("any");
   const [collectionId, setCollectionId] = useState("any");
   const [tagId, setTagId] = useState("any");
   const [dateFrom, setDateFrom] = useState("");
@@ -49,7 +51,7 @@ export function SearchScreen() {
   const filters = useMemo<SearchFilters>(
     () => ({
       mode,
-      types: type === "any" ? undefined : [type],
+      types: type === "any" ? undefined : type === "file" ? ["pdf", "docx", "xlsx", "video"] : [type],
       collectionIds: collectionId === "any" ? undefined : [collectionId],
       tagIds: tagId === "any" ? undefined : [tagId],
       dateFrom: dateFrom || undefined,

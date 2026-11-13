@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import * as Dialog from "@radix-ui/react-dialog";
-import { CornerDownLeft, FileText, Folder, Link2, Plus, Search, Tag as TagIcon, Music, File } from "lucide-react";
+import { CornerDownLeft, FileText, Folder, Link2, Plus, Search, Tag as TagIcon, Music, File, Sheet, Video } from "lucide-react";
 import { cn } from "@inbox/ui";
 import type { Item } from "@inbox/api-client";
 import { useApi } from "../state/api";
@@ -37,6 +37,10 @@ const typeIcon = (type: Item["type"]) => {
       return <Link2 size={16} strokeWidth={1.5} aria-hidden />;
     case "audio":
       return <Music size={16} strokeWidth={1.5} aria-hidden />;
+    case "video":
+      return <Video size={16} strokeWidth={1.5} aria-hidden />;
+    case "xlsx":
+      return <Sheet size={16} strokeWidth={1.5} aria-hidden />;
     case "pdf":
     case "docx":
       return <File size={16} strokeWidth={1.5} aria-hidden />;

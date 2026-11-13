@@ -33,7 +33,7 @@ export interface ApiClient {
   listItems(opts: {
     cursor?: string;
     limit?: number;
-    filter?: "all" | "attention" | ItemType;
+    filter?: "all" | "attention" | "file" | ItemType;
   }): Promise<Page<Item>>;
   getItem(id: string): Promise<Item>;
   saveText(input: SaveTextInput): Promise<Item>;

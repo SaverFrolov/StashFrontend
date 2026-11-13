@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { File as FileIcon, Upload, X } from "lucide-react";
 import { Button, Dialog, DialogContent, DialogFooter, Field, Textarea, cn, useToast } from "@inbox/ui";
-import { ALLOWED_FILE_MIME, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB } from "@inbox/api-client";
+import { FILE_ACCEPT_ATTR, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB, isAllowedUploadFile } from "@inbox/api-client";
 import { useApi } from "../state/api";
 import { formatBytes } from "../lib/format";
 
@@ -16,8 +16,7 @@ interface UploadEntry {
 }
 
 function validate(file: File, t: (k: string, o?: Record<string, unknown>) => string): string | undefined {
-  const isDocx = file.name.toLowerCase().endsWith(".docx");
-  if (!ALLOWED_FILE_MIME.includes(file.type) && !isDocx && !file.name.toLowerCase().endsWith(".pdf")) {
+  if (!isAllowedUploadFile(file)) {
     return t("modals.uploadInvalidType");
   }
   if (file.size > MAX_FILE_SIZE_BYTES) {
@@ -141,7 +140,7 @@ export function UploadDialog({
           <input
             ref={inputRef}
             type="file"
-            accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            accept={FILE_ACCEPT_ATTR}
             multiple
             className="hidden"
             onChange={(e) => {

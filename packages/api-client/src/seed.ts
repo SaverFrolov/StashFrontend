@@ -307,4 +307,51 @@ export const seedItems: Item[] = [
       { name: "annotate", status: "skipped" },
     ],
   }),
+  base("item-17", "video", "done", "Лекция: введение в статистику (запись)", 2 * D, {
+    lang: "ru",
+    source: { name: "Лекция: введение в статистику (запись).mp4" },
+    original: { file: { name: "statistics-lecture.mp4", size: 148_000_000, mime: "video/mp4", url: "blob:mock/statistics-lecture.mp4" } },
+    ai: {
+      annotation: "Видеозапись вводной лекции по статистике: выборки, средние значения, базовые распределения.",
+      tags: ["study", "research"],
+      model: "mock-model-1",
+      generatedAt: iso(2 * D - 60_000),
+      edited: false,
+    },
+    collectionIds: ["col-study"],
+    extracted: { text: "Расшифровка видеозаписи (демо): тема лекции — описательная статистика, меры центральной тенденции..." },
+    processing: [
+      { name: "extract", status: "ok", startedAt: iso(2 * D), finishedAt: iso(2 * D - 30_000) },
+      { name: "annotate", status: "ok", startedAt: iso(2 * D - 30_000), finishedAt: iso(2 * D - 60_000) },
+    ],
+  }),
+  base("item-18", "xlsx", "done", "Бюджет поездки в Сочи.xlsx", 1 * D + 4 * H, {
+    lang: "ru",
+    source: { name: "Бюджет поездки в Сочи.xlsx" },
+    original: { file: { name: "budget-sochi.xlsx", size: 46_000, mime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", url: "blob:mock/budget-sochi.xlsx" } },
+    ai: {
+      annotation: "Таблица с расчётом бюджета поездки: транспорт, жильё, активности и итоговая сумма по дням.",
+      tags: ["travel"],
+      model: "mock-model-1",
+      generatedAt: iso(1 * D + 4 * H - 45_000),
+      edited: false,
+    },
+    collectionIds: ["col-travel"],
+    extracted: { text: "Лист «Бюджет»: Транспорт 12 500 ₽; Жильё 21 000 ₽; Активности 8 400 ₽; Итого 41 900 ₽..." },
+    processing: [
+      { name: "extract", status: "ok", startedAt: iso(1 * D + 4 * H), finishedAt: iso(1 * D + 4 * H - 20_000) },
+      { name: "annotate", status: "ok", startedAt: iso(1 * D + 4 * H - 20_000), finishedAt: iso(1 * D + 4 * H - 45_000) },
+    ],
+  }),
+  base("item-19", "audio", "partial", "Подкаст-интервью о городских проектах.mp3", 5 * H, {
+    lang: "ru",
+    source: { name: "Подкаст-интервью о городских проектах.mp3" },
+    original: { file: { name: "podcast-interview.mp3", size: 34_000_000, mime: "audio/mpeg", url: "blob:mock/podcast-interview.mp3" } },
+    ai: { tags: ["audio", "ideas"], model: "mock-model-1", edited: false },
+    extracted: { error: "Audio saved; transcription not available" },
+    processing: [
+      { name: "extract", status: "failed", startedAt: iso(5 * H), finishedAt: iso(4 * H), error: "Transcription service unavailable" },
+      { name: "annotate", status: "skipped" },
+    ],
+  }),
 ];
