@@ -38,9 +38,10 @@ export function App() {
         <SettingsProvider>
           <AuthProvider>
             <ToastProvider>
-              <ModalProvider>
-                <CommandPaletteProvider>
-                  <BrowserRouter>
+              <BrowserRouter>
+                {/* Modal/palette providers use router hooks — they must be inside Router */}
+                <ModalProvider>
+                  <CommandPaletteProvider>
                     <Suspense fallback={null}>
                       <Routes>
                         <Route path="/login" element={<LoginScreen />} />
@@ -63,9 +64,9 @@ export function App() {
                         </Route>
                       </Routes>
                     </Suspense>
-                  </BrowserRouter>
-                </CommandPaletteProvider>
-              </ModalProvider>
+                  </CommandPaletteProvider>
+                </ModalProvider>
+              </BrowserRouter>
             </ToastProvider>
           </AuthProvider>
         </SettingsProvider>

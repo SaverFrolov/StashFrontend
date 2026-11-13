@@ -25,6 +25,11 @@ export function initI18n(): void {
       supportedLngs: [...SUPPORTED_LANGUAGES],
       load: "currentOnly",
       interpolation: { escapeValue: false },
+      // Initialize synchronously and disable suspense: providers call
+      // useTranslation above the only <Suspense> boundary, so a deferred
+      // init would throw a promise into the ErrorBoundary on first paint.
+      initImmediate: false,
+      react: { useSuspense: false },
       detection: {
         order: ["localStorage", "navigator"],
         lookupLocalStorage: "inbox-language",

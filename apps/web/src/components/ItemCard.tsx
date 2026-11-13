@@ -56,10 +56,11 @@ function highlight(text: string, query?: string): React.ReactNode {
   if (!query?.trim()) return text;
   const words = query.trim().split(/\s+/).filter((w) => w.length > 2);
   if (words.length === 0) return text;
+  const lowerWords = words.map((w) => w.toLowerCase());
   const pattern = new RegExp(`(${words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "gi");
   const parts = text.split(pattern);
   return parts.map((p, i) =>
-    pattern.test(p) && words.some((w) => p.toLowerCase() === w.toLowerCase()) ? <mark key={i}>{p}</mark> : p,
+    lowerWords.includes(p.toLowerCase()) ? <mark key={i}>{p}</mark> : p,
   );
 }
 
