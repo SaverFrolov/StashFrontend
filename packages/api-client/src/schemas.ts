@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const itemTypeSchema = z.enum(["link", "text", "pdf", "docx", "audio"]);
+export const itemTypeSchema = z.enum(["link", "text", "pdf", "docx", "audio", "video", "xlsx"]);
 
 export const itemStatusSchema = z.enum([
   "saved",

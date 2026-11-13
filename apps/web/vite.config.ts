@@ -32,7 +32,7 @@ export default defineConfig({
             text: "text",
             url: "url",
             files: [
-              { name: "files", accept: ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "audio/*", "image/*", "text/plain"] },
+              { name: "files", accept: ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "audio/*", "video/*", "image/*", "text/plain"] },
             ],
           },
         },

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { Check, File as FileIcon, Mic, Paperclip, Square, X } from "lucide-react";
 import { Button, Field, Textarea, cn } from "@inbox/ui";
-import { ALLOWED_FILE_MIME, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB, splitUrlAndComment } from "@inbox/api-client";
+import { FILE_ACCEPT_ATTR, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB, isAllowedUploadFile, splitUrlAndComment } from "@inbox/api-client";
 import { useApi } from "../state/api";
 import { useModals } from "../modals/ModalProvider";
 import { formatBytes, formatDuration } from "../lib/format";
@@ -139,12 +139,7 @@ export function CaptureScreen() {
     onSuccess: () => setSaved(true),
   });
 
-  const fileValid =
-    !file ||
-    (file.size <= MAX_FILE_SIZE_BYTES &&
-      (ALLOWED_FILE_MIME.includes(file.type) ||
-        file.name.toLowerCase().endsWith(".pdf") ||
-        file.name.toLowerCase().endsWith(".docx")));
+  const fileValid = !file || (file.size <= MAX_FILE_SIZE_BYTES && isAllowedUploadFile(file));
 
   const canSave = Boolean(text.trim() || file || audioBlob) && fileValid && !saveMutation.isPending;
 
@@ -263,7 +258,7 @@ export function CaptureScreen() {
             <input
               type="file"
               className="hidden"
-              accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              accept={FILE_ACCEPT_ATTR}
               onChange={(e) => {
                 if (e.target.files?.[0]) setFile(e.target.files[0]);
                 e.target.value = "";

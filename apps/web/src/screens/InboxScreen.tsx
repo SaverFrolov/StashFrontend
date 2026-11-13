@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FolderPlus, Trash2, X } from "lucide-react";
 import { Button, ItemCardSkeleton, SegmentedControl, cn, useToast } from "@inbox/ui";
-import type { Item, ItemType } from "@inbox/api-client";
+import type { Item } from "@inbox/api-client";
 import { FEED_PAGE_SIZE, features } from "@inbox/api-client";
 import { useApi, ITEM_UPDATED_EVENT } from "../state/api";
 import { ItemCard } from "../components/ItemCard";
@@ -52,15 +52,13 @@ export function Feed({
   const [dragOver, setDragOver] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const apiFilter = filter === "file" ? "pdf" : filter === "text" ? "text" : filter;
-
   const feedQuery = useInfiniteQuery({
     queryKey: ["feed", filter],
     queryFn: ({ pageParam }) =>
       api.listItems({
         cursor: pageParam as string | undefined,
         limit: FEED_PAGE_SIZE,
-        filter: apiFilter as "all" | "attention" | ItemType,
+        filter,
       }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => {

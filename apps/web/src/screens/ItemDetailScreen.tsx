@@ -445,6 +445,15 @@ function ItemDetailContent({
             {t("recorder.preview")}
           </audio>
         )}
+        {item.type === "video" && item.original.file && (
+          <video
+            controls
+            preload="metadata"
+            src={item.original.file.url}
+            className="mt-2 w-full rounded-control border border-border bg-black"
+            aria-label={item.original.file.name}
+          />
+        )}
         {!item.original.text && !item.original.file && !item.source.url && (
           <p className="text-base text-text-tertiary">{t("item.noOriginalText")}</p>
         )}

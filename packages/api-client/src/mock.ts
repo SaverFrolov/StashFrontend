@@ -21,6 +21,7 @@ import type {
   UsageInfo,
 } from "./types";
 import { seedCollections, seedItems, seedTags } from "./seed";
+import { typeFromMime } from "./config";
 
 const STORAGE_KEY = "inbox-mock-db-v1";
 const SESSION_KEY = "inbox-mock-session-v1";
@@ -211,7 +212,7 @@ export class MockApi implements ApiClient {
   async listItems(opts: {
     cursor?: string;
     limit?: number;
-    filter?: "all" | "attention" | ItemType;
+    filter?: "all" | "attention" | "file" | ItemType;
   }): Promise<Page<Item>> {
     await delay();
     let items = [...this.db.items].sort(
@@ -225,8 +226,9 @@ export class MockApi implements ApiClient {
         if (f === "link") return i.type === "link";
         if (f === "text") return i.type === "text";
         if (f === "audio") return i.type === "audio";
+        if (f === "file") return i.type === "pdf" || i.type === "docx" || i.type === "xlsx" || i.type === "video";
         if (f === "pdf" || f === "docx") return i.type === "pdf" || i.type === "docx";
-        return true;
+        return i.type === f;
       });
     }
     const limit = opts.limit ?? 20;
@@ -366,7 +368,7 @@ export class MockApi implements ApiClient {
   async saveFile(input: SaveFileInput): Promise<Item> {
     await delay();
     const mime = input.file.mime;
-    const type: ItemType = mime === "application/pdf" ? "pdf" : "docx";
+    const type: ItemType = typeFromMime(mime, input.file.name);
     const item = this.newItem({
       type,
       status: "saved",
@@ -379,8 +381,27 @@ export class MockApi implements ApiClient {
     });
     this.db.items.push(item);
     this.persist();
-    if (this.db.aiSettings.autoProcess) this.runPipeline(item, "");
+    if (type === "audio") {
+      // Uploaded audio (e.g. mp3): same behaviour as voice notes — no transcription in the mock.
+      this.scheduleAudioPartial(item);
+    } else if (this.db.aiSettings.autoProcess) {
+      this.runPipeline(item, "");
+    }
     return structuredClone(item);
+  }
+
+  /** Transcription is unavailable in the mock: audio always ends as partial. */
+  private scheduleAudioPartial(item: Item): void {
+    window.setTimeout(() => {
+      item.status = "partial";
+      item.extracted = { error: "Audio saved; transcription not available" };
+      item.processing = [
+        { name: "extract", status: "failed", startedAt: item.capturedAt, finishedAt: new Date().toISOString(), error: "Transcription service unavailable" },
+        { name: "annotate", status: "skipped" },
+      ];
+      this.persist();
+      window.dispatchEvent(new CustomEvent("inbox:mock-item-updated", { detail: { id: item.id } }));
+    }, 1500);
   }
 
   async saveAudio(input: SaveAudioInput): Promise<Item> {
@@ -394,17 +415,7 @@ export class MockApi implements ApiClient {
     });
     this.db.items.push(item);
     this.persist();
-    // Transcription is unavailable in the mock: audio always ends as partial.
-    window.setTimeout(() => {
-      item.status = "partial";
-      item.extracted = { error: "Audio saved; transcription not available" };
-      item.processing = [
-        { name: "extract", status: "failed", startedAt: item.capturedAt, finishedAt: new Date().toISOString(), error: "Transcription service unavailable" },
-        { name: "annotate", status: "skipped" },
-      ];
-      this.persist();
-      window.dispatchEvent(new CustomEvent("inbox:mock-item-updated", { detail: { id: item.id } }));
-    }, 1500);
+    this.scheduleAudioPartial(item);
     return structuredClone(item);
   }
 
