@@ -1,92 +1,92 @@
-# Stash — universal personal inbox (frontend)
+# Stash — универсальные личные «входящие» (фронтенд)
 
-**Stash** is a universal "personal inbox": save links, text notes, PDF/DOCX files and voice notes from a browser, desktop or phone into one store. The system keeps the original, extracts text, and an AI model adds an annotation and tags. The UI captures, organizes and retrieves — it is not a chatbot.
+**Stash** — это универсальный «личный входящий ящик»: сохраняйте ссылки, текстовые заметки, файлы PDF/DOCX и голосовые заметки из браузера, с компьютера или телефона в одно хранилище. Система сохраняет оригинал, извлекает текст, а ИИ-модель добавляет аннотацию и теги. Интерфейс захватывает, организует и находит — это не чат-бот.
 
-Built from the specification in `frontend_v2.docx`. Backend is out of scope: the app talks to an `ApiClient` interface with a full-featured `MockApi` (in-memory + localStorage, simulated processing pipeline).
+Реализовано по спецификации из `frontend_v2.docx`. Бэкенд вне объёма работ: приложение работает через интерфейс `ApiClient` с полнофункциональным `MockApi` (in-memory + localStorage, симуляция конвейера обработки).
 
-## Repository layout (pnpm monorepo)
+## Структура репозитория (pnpm-монорепозиторий)
 
 ```
-apps/web            — React 18 + Vite web app / PWA (screens S1–S12)
-apps/extension      — Chromium MV3 extension (popup E1, options E2, context menus)
-packages/ui         — design tokens (CSS variables), Tailwind preset, Radix-based components
-packages/api-client — types, Zod schemas, ApiClient interface, MockApi, RestApi, seed data
-scripts/gen-icons.mjs — dependency-free PNG icon generator
-docs/design-tokens.md — token reference
+apps/web            — веб-приложение / PWA на React 18 + Vite (экраны S1–S12)
+apps/extension      — Chromium MV3 расширение (popup E1, options E2, контекстные меню)
+packages/ui         — дизайн-токены (CSS-переменные), Tailwind-пресет, компоненты на Radix
+packages/api-client — типы, Zod-схемы, интерфейс ApiClient, MockApi, RestApi, демо-данные
+scripts/gen-icons.mjs — генератор PNG-иконок без зависимостей
+docs/design-tokens.md — справочник токенов
 ```
 
-## Requirements
+## Требования
 
-- Node.js 18+ (tested on Node 24)
+- Node.js 18+ (проверено на Node 24)
 - pnpm 9 (`corepack enable pnpm`)
 
-## Run
+## Запуск
 
 ```bash
 pnpm install
-pnpm --filter @inbox/web dev        # dev server (http://localhost:5173)
+pnpm --filter @inbox/web dev        # dev-сервер (http://localhost:5173)
 ```
 
-Per `QWEN.md`, automated verification never starts dev servers — use single-pass builds:
+Согласно `QWEN.md`, автоматическая проверка никогда не запускает dev-серверы — используются разовые сборки:
 
 ```bash
-pnpm build        # typecheck + production build for all packages
-pnpm typecheck    # tsc --noEmit everywhere
-pnpm test         # Vitest (plural formatter + status-to-label mapping)
+pnpm build        # typecheck + production-сборка всех пакетов
+pnpm typecheck    # tsc --noEmit везде
+pnpm test         # Vitest (форматтер множественного числа + маппинг статусов)
 ```
 
-Demo login: any email + any password (MockApi accepts everything). The store is seeded with 16 domain-diverse items, 3 collections and ~12 tags. Data persists in `localStorage` (`inbox-mock-db-v1`).
+Демо-вход: любая почта + любой пароль (MockApi принимает всё). В хранилище заранее загружены 16 разноплановых элементов, 3 коллекции и ~12 тегов. Данные сохраняются в `localStorage` (`inbox-mock-db-v1`).
 
-## Switching to the real API
+## Переключение на реальное API
 
-Create `apps/web/.env.local`:
+Создайте `apps/web/.env.local`:
 
 ```
 VITE_API_BASE_URL=https://your-fastapi-host/api
 ```
 
-When `VITE_API_BASE_URL` is set, `createApiClient()` returns `RestApi` (Bearer-token auth, JSON endpoints mirroring the `ApiClient` interface); otherwise it returns `MockApi`. No code changes needed.
+Когда `VITE_API_BASE_URL` задан, `createApiClient()` возвращает `RestApi` (Bearer-авторизация, JSON-эндпоинты, повторяющие интерфейс `ApiClient`); иначе — `MockApi`. Изменения кода не требуются.
 
-The extension stores its server URL and API token on its options page (Settings → Capture in the web app explains where to create tokens).
+Расширение хранит URL сервера и API-токен на своей странице настроек (в веб-приложении: Настройки → Захват — там объясняется, где создать токены).
 
-## Adding a locale
+## Добавление локали
 
-1. Copy `apps/web/src/locales/en.json` to `apps/web/src/locales/<lang>.json` and translate the values (keys must stay identical).
-2. Register it in `apps/web/src/i18n.ts`: add the code to `SUPPORTED_LANGUAGES` and an entry to `resources`.
-3. Add the language option in `SettingsScreen` → Appearance (`appearanceLanguage` select).
+1. Скопируйте `apps/web/src/locales/en.json` в `apps/web/src/locales/<lang>.json` и переведите значения (ключи должны остаться идентичными).
+2. Зарегистрируйте её в `apps/web/src/i18n.ts`: добавьте код языка в `SUPPORTED_LANGUAGES` и запись в `resources`.
+3. Добавьте вариант языка в `SettingsScreen` → Внешний вид (селект `appearanceLanguage`).
 
-Nothing else references individual strings; plural forms are handled by `Intl.PluralRules` via i18next `_one/_few/_many/_other` keys.
+Больше ничто не ссылается на отдельные строки; формы множественного числа обрабатываются `Intl.PluralRules` через ключи i18next `_one/_few/_many/_other`.
 
-## Loading the extension unpacked
+## Загрузка расширения в распакованном виде
 
-1. `pnpm --filter @inbox/extension build` — output goes to `apps/extension/dist`.
-2. Open `chrome://extensions` (Chrome, Yandex Browser or Edge).
-3. Enable **Developer mode**.
-4. Click **Load unpacked** and select `apps/extension/dist`.
-5. Open the extension options, set the server URL and API token.
+1. `pnpm --filter @inbox/extension build` — результат в `apps/extension/dist`.
+2. Откройте `chrome://extensions` (Chrome, Яндекс Браузер или Edge).
+3. Включите **Режим разработчика**.
+4. Нажмите **Загрузить распакованное расширение** и выберите `apps/extension/dist`.
+5. Откройте настройки расширения, укажите URL сервера и API-токен.
 
-## PWA / phone
+## PWA / телефон
 
-The web app is a PWA (`vite-plugin-pwa`): install prompt banner, home-screen shortcut, and a Web Share Target — the phone share sheet can send links/text/files to `/capture`. In production, serve over HTTPS for the service worker to register.
+Веб-приложение — PWA (`vite-plugin-pwa`): баннер с предложением установки, ярлык на домашнем экране и Web Share Target — из меню «Поделиться» на телефоне можно отправлять ссылки/текст/файлы на `/capture`. В продакшене отдавайте приложение по HTTPS, иначе service worker не зарегистрируется.
 
-## Feature flags
+## Функциональные флаги
 
-`packages/api-client/src/config.ts` exports `features`:
+`packages/api-client/src/config.ts` экспортирует объект `features`:
 
-| Flag | Effect when false |
+| Флаг | Эффект при значении false |
 | --- | --- |
-| `features.audio` | mic button and Audio feed filter are hidden |
-| `features.semanticSearch` | "Meaning" search mode is hidden |
-| `features.export` | export buttons/dialogs are hidden |
+| `features.audio` | скрываются кнопка микрофона и фильтр «Аудио» в ленте |
+| `features.semanticSearch` | скрывается режим поиска «Смысл» |
+| `features.export` | скрываются кнопки и диалоги экспорта |
 
-## Recorded decisions (unspecified in the spec → simplest conventional choice)
+## Зафиксированные решения (не оговорены в спецификации → простейший общепринятый вариант)
 
-- **Bundler for the extension**: Vite MPA build (popup + options pages); the service worker `background.js` is plain JS copied from `public/` — no CRX tooling needed.
-- **Icons**: generated solid-color PNGs (`scripts/gen-icons.mjs`) — accent square with a white "save to inbox" glyph; replace freely.
-- **Font**: Inter Variable via `@fontsource-variable/inter` (self-hosted npm package, Latin + Cyrillic subsets, no CDN).
-- **Router data flow**: TanStack Query for all reads; MockApi emits `inbox:mock-item-updated` window events which invalidate queries so pipeline statuses update live.
-- **Auth**: MockApi accepts any credentials and persists a fake session in localStorage; `RequireAuth` redirects to `/login` and preserves the target path.
-- **Item detail on wide screens**: `/items/:id` renders the feed (480 px) + detail split at ≥1280 px; below that it is a full page with a back button.
-- **Export**: MockApi produces a JSON or Markdown download (no real ZIP packaging of originals — originals stay referenced by URL inside the JSON).
-- **`APP_NAME`**: `"Stash"` from `packages/api-client/src/config.ts`.
-- **Keyboard shortcuts** (M14 sheet): `⌘K/Ctrl+K` palette, `?` shortcuts sheet; the sheet also lists composer shortcuts (Enter/Shift+Enter).
+- **Сборщик для расширения**: Vite MPA-сборка (страницы popup + options); service worker `background.js` — обычный JS, копируемый из `public/`, без CRX-инструментария.
+- **Иконки**: сгенерированные однотонные PNG (`scripts/gen-icons.mjs`) — акцентный квадрат с белой пиктограммой «сохранить во входящие»; можно свободно заменить.
+- **Шрифт**: Inter Variable через `@fontsource-variable/inter` (self-hosted npm-пакет, латиница + кириллица, без CDN).
+- **Поток данных роутера**: TanStack Query для всех чтений; MockApi рассылает window-события `inbox:mock-item-updated`, которые инвалидируют запросы, поэтому статусы конвейера обновляются вживую.
+- **Авторизация**: MockApi принимает любые учётные данные и сохраняет фейковую сессию в localStorage; `RequireAuth` перенаправляет на `/login`, сохраняя целевой путь.
+- **Детали элемента на широких экранах**: `/items/:id` при ≥1280 px показывает сплит «лента (480 px) + детали»; уже — отдельная страница с кнопкой «Назад».
+- **Экспорт**: MockApi формирует JSON- или Markdown-файл для скачивания (без настоящей ZIP-упаковки оригиналов — оригиналы остаются в JSON как ссылки-URL).
+- **`APP_NAME`**: `"Stash"` из `packages/api-client/src/config.ts`.
+- **Горячие клавиши** (шпаргалка M14): `⌘K/Ctrl+K` — палитра команд, `?` — список горячих клавиш; там же перечислены сочетания для поля ввода (Enter/Shift+Enter).
