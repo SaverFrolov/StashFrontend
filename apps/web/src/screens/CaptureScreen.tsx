@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { Check, File as FileIcon, Mic, Paperclip, Square, X } from "lucide-react";
 import { Button, Field, Textarea, cn } from "@inbox/ui";
-import { FILE_ACCEPT_ATTR, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB, isAllowedUploadFile, splitUrlAndComment } from "@inbox/api-client";
+import { FILE_ACCEPT_ATTR, isAllowedUploadFile, splitUrlAndComment } from "@inbox/api-client";
 import { useApi } from "../state/api";
 import { useModals } from "../modals/ModalProvider";
 import { formatBytes, formatDuration } from "../lib/format";
@@ -139,7 +139,7 @@ export function CaptureScreen() {
     onSuccess: () => setSaved(true),
   });
 
-  const fileValid = !file || (file.size <= MAX_FILE_SIZE_BYTES && isAllowedUploadFile(file));
+  const fileValid = !file || isAllowedUploadFile(file);
 
   const canSave = Boolean(text.trim() || file || audioBlob) && fileValid && !saveMutation.isPending;
 
@@ -173,7 +173,7 @@ export function CaptureScreen() {
 
   return (
     <div className="flex min-h-dvh flex-col bg-bg">
-      <header className="flex h-14 items-center justify-between border-b border-border bg-surface px-4">
+      <header className="flex h-14 items-center justify-between border-b border-glass-border bg-surface px-4">
         <button
           type="button"
           aria-label={t("common.close")}
@@ -188,7 +188,7 @@ export function CaptureScreen() {
 
       <main className="mx-auto flex w-full max-w-feed flex-1 flex-col gap-4 p-4">
         {new URLSearchParams(window.location.search).toString() && (
-          <p role="status" className="rounded-control border border-border bg-surface-subtle px-3 py-2 text-sm text-text-secondary">
+          <p role="status" className="rounded-control border border-glass-border bg-surface-subtle px-3 py-2 text-sm text-text-secondary">
             {t("capture.sharedFromPhone")}
           </p>
         )}
@@ -209,16 +209,12 @@ export function CaptureScreen() {
         </Field>
 
         {file && (
-          <div className="flex items-center gap-3 rounded-control border border-border bg-surface p-3">
+          <div className="flex items-center gap-3 rounded-control border border-glass-border bg-surface p-3">
             <FileIcon size={18} strokeWidth={1.5} className="shrink-0 text-text-tertiary" aria-hidden />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-base text-text">{file.name}</span>
               <span className={cn("tnum block text-xs", fileValid ? "text-text-tertiary" : "text-danger")}>
-                {fileValid
-                  ? formatBytes(file.size)
-                  : file.size > MAX_FILE_SIZE_BYTES
-                    ? t("modals.uploadTooLarge", { size: MAX_FILE_SIZE_MB })
-                    : t("modals.uploadInvalidType")}
+                {fileValid ? formatBytes(file.size) : t("modals.uploadInvalidType")}
               </span>
             </span>
             <button
@@ -233,7 +229,7 @@ export function CaptureScreen() {
         )}
 
         {audioBlob && !recording && (
-          <div className="flex items-center gap-3 rounded-control border border-border bg-surface p-3">
+          <div className="flex items-center gap-3 rounded-control border border-glass-border bg-surface p-3">
             <Mic size={18} strokeWidth={1.5} className="shrink-0 text-text-tertiary" aria-hidden />
             <audio controls src={URL.createObjectURL(audioBlob)} className="h-8 min-w-0 flex-1" aria-label={t("recorder.preview")} />
             <span className="tnum shrink-0 text-xs text-text-tertiary">{formatDuration(recordMs)}</span>

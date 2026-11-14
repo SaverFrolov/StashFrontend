@@ -243,7 +243,7 @@ function ItemDetailContent({
   return (
     <div className="mx-auto w-full max-w-detail px-4 pb-16">
       {/* Header */}
-      <header className="sticky top-0 z-20 -mx-4 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur-none">
+      <header className="sticky top-0 z-20 -mx-4 border-b border-glass-border bg-surface px-4 py-3">
         {showBack && (
           <button
             type="button"

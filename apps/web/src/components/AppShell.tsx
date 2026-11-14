@@ -45,7 +45,7 @@ export function AppShell() {
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "sticky top-0 hidden h-dvh shrink-0 border-r border-border bg-surface transition-[width] duration-150 ease-out lg:flex lg:flex-col",
+          "sticky top-0 hidden h-dvh shrink-0 border-r border-glass-border bg-surface transition-[width] duration-150 ease-out lg:flex lg:flex-col",
           sidebarWidth,
         )}
         aria-label={t("shell.inbox")}
@@ -66,7 +66,7 @@ export function AppShell() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setDrawerOpen(false)}
           />
-          <div className="absolute inset-y-0 left-0 flex w-[264px] max-w-[85vw] flex-col border-r border-border bg-surface">
+          <div className="absolute inset-y-0 left-0 flex w-[264px] max-w-[85vw] flex-col border-r border-glass-border bg-surface">
             <Sidebar collapsed={false} onNavigate={() => setDrawerOpen(false)} />
           </div>
         </div>
@@ -74,7 +74,7 @@ export function AppShell() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Mobile top bar */}
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-border bg-surface px-3 lg:hidden">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-glass-border bg-surface px-3 lg:hidden">
           <IconButton label={t("shell.openMenu")} onClick={() => setDrawerOpen(true)}>
             <MenuIcon size={20} strokeWidth={1.5} aria-hidden />
           </IconButton>
@@ -86,7 +86,7 @@ export function AppShell() {
         </header>
 
         {/* Desktop top bar */}
-        <header className="sticky top-0 z-30 hidden h-14 items-center gap-3 border-b border-border bg-surface px-4 lg:flex">
+        <header className="sticky top-0 z-30 hidden h-14 items-center gap-3 border-b border-glass-border bg-surface px-4 lg:flex">
           <IconButton
             label={collapsed ? t("shell.expandSidebar") : t("shell.collapseSidebar")}
             onClick={() => setCollapsed((c) => !c)}
@@ -101,11 +101,11 @@ export function AppShell() {
           <button
             type="button"
             onClick={openPalette}
-            className="ml-2 flex h-9 min-w-0 max-w-md flex-1 items-center gap-2 rounded-control border border-border bg-surface-subtle px-3 text-base text-text-tertiary hover:border-border-strong"
+            className="ml-2 flex h-9 min-w-0 max-w-md flex-1 items-center gap-2 rounded-control border border-glass-border bg-surface-subtle px-3 text-base text-text-tertiary hover:border-border-strong"
           >
             <Search size={16} strokeWidth={1.5} aria-hidden />
             <span className="truncate">{t("modals.commandPalettePlaceholder")}</span>
-            <kbd className="ml-auto hidden shrink-0 rounded border border-border bg-surface px-1.5 py-0.5 font-mono text-xs text-text-tertiary xl:block">
+            <kbd className="ml-auto hidden shrink-0 rounded border border-glass-border bg-surface px-1.5 py-0.5 font-mono text-xs text-text-tertiary xl:block">
               ⌘K
             </kbd>
           </button>

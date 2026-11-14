@@ -84,7 +84,7 @@ export function TagCombobox({
         <ul
           id="tag-combobox-list"
           role="listbox"
-          className="absolute left-0 top-full z-30 mt-1 w-full min-w-[160px] overflow-hidden rounded-dialog border border-border bg-surface p-1 shadow-pop"
+          className="absolute left-0 top-full z-30 mt-1 w-full min-w-[160px] overflow-hidden rounded-dialog border border-glass-border bg-surface p-1 glass-rim"
         >
           {suggestions.map((tag, i) => (
             <li key={tag.id} role="option" aria-selected={i === activeIndex}>

@@ -56,7 +56,7 @@ export function ToastProvider({ children, undoLabelDefault = "Undo" }: { childre
               if (!open) setToasts((prev) => prev.filter((x) => x.id !== t.id));
             }}
             className={cn(
-              "flex items-center gap-3 rounded-dialog border border-border bg-surface px-4 py-3 text-base text-text shadow-pop",
+              "flex items-center gap-3 rounded-dialog border border-glass-border bg-surface px-4 py-3 text-base text-text shadow-pop glass-rim",
               "data-[state=open]:animate-[toast-in_150ms_ease-out]",
             )}
           >

@@ -175,7 +175,7 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/40" />
           <Dialog.Content
-            className="fixed left-1/2 top-[15vh] z-50 w-[calc(100vw-32px)] max-w-[560px] -translate-x-1/2 overflow-hidden rounded-dialog border border-border bg-surface shadow-pop"
+            className="fixed left-1/2 top-[15vh] z-50 w-[calc(100vw-32px)] max-w-[560px] -translate-x-1/2 overflow-hidden rounded-dialog border border-glass-border bg-surface glass-rim"
             onKeyDown={onKeyDown}
             aria-describedby={undefined}
           >
@@ -190,7 +190,7 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
                 aria-label={t("modals.commandPalettePlaceholder")}
                 className="h-12 w-full bg-transparent text-md text-text outline-none placeholder:text-text-tertiary"
               />
-              <kbd className="hidden shrink-0 rounded border border-border bg-surface-subtle px-1.5 py-0.5 font-mono text-xs text-text-tertiary sm:block">
+              <kbd className="hidden shrink-0 rounded border border-glass-border bg-surface-subtle px-1.5 py-0.5 font-mono text-xs text-text-tertiary sm:block">
                 Esc
               </kbd>
             </div>

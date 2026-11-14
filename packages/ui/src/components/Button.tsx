@@ -13,13 +13,13 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-accent text-white hover:bg-accent-hover border border-transparent disabled:opacity-50",
+    "bg-gradient-to-b from-accent to-accent-hover text-white border border-transparent shadow-glow hover:brightness-110 disabled:opacity-50",
   secondary:
-    "bg-surface text-text border border-border-strong hover:bg-surface-subtle",
+    "bg-surface text-text border border-glass-border shadow-pop hover:bg-surface-subtle",
   ghost:
     "bg-transparent text-text-secondary border border-transparent hover:bg-surface-subtle hover:text-text",
   danger:
-    "bg-transparent text-danger border border-border-strong hover:bg-danger/10",
+    "bg-surface text-danger border border-glass-border hover:bg-danger/10",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(

@@ -124,7 +124,7 @@ export function TagsScreen() {
       )}
 
       {sortedTags.length > 0 && (
-        <div className="mt-4 overflow-x-auto rounded-dialog border border-border bg-surface">
+        <div className="mt-4 overflow-x-auto rounded-dialog border border-glass-border bg-surface">
           <table className="w-full min-w-[480px] border-collapse text-left">
             <thead>
               <tr className="border-b border-border text-xs text-text-tertiary">

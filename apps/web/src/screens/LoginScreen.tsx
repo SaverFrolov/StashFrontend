@@ -13,7 +13,7 @@ export function AuthLayout({ title, children, footer }: { title: string; childre
         <h1 className="mb-1 text-center text-xl font-semibold text-text">{APP_NAME}</h1>
         <p className="mb-6 text-center text-base text-text-secondary">{title}</p>
         <form
-          className="flex flex-col gap-4 rounded-dialog border border-border bg-surface p-6"
+          className="flex flex-col gap-4 rounded-dialog border border-glass-border bg-surface p-6 glass-rim"
           onSubmit={(e) => e.preventDefault()}
         >
           {children}

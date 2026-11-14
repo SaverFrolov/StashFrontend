@@ -1,33 +1,51 @@
-# Design tokens
+# Design tokens — Liquid Glass edition
 
 Single source of truth: `packages/ui/src/tokens.css` (CSS variables) + `packages/ui/src/tailwind-preset.ts` (Tailwind mapping). Themes: `data-theme="light" | "dark" | "system"` on `<html>`; system honors `prefers-color-scheme`.
 
-Character: calm, neutral, utilitarian. One accent colour only for primary actions, links, focus rings, selected states and the user-comment rule. Everything else is neutral. Body text meets WCAG AA in both themes.
+Character (updated 2026-11-14 at the user's request; supersedes spec section 8 palette, structure and typography kept): **liquid glass** — translucent frosted panels over an ambient green aurora background, specular glass rims, soft depth, glowing green primary actions. The green accent is preserved as the single accent colour. Body text meets WCAG AA in both themes (text tokens stay high-contrast; only surfaces are translucent).
+
+## Glass system
+
+| Token | Light | Dark | Purpose |
+| --- | --- | --- | --- |
+| `--surface` | `rgb(255 255 255 / 0.55)` | `rgb(22 34 28 / 0.55)` | Translucent panel background |
+| `--surface-subtle` | `rgb(255 255 255 / 0.32)` | `rgb(30 44 37 / 0.45)` | Subtle translucent fill (hover, insets) |
+| `--glass-border` | `rgb(255 255 255 / 0.65)` | `rgb(255 255 255 / 0.14)` | Bright glass rim on raised panels |
+| `--glass-blur` | `20px` | `20px` | Frosted blur amount |
+| `--glass-saturate` | `160%` | `160%` | Backdrop saturation boost |
+| `--aurora-image` | green radial washes | deeper green washes | Ambient background (fixed attachment) |
+| `--shadow-pop` | `0 8px 32px rgb(10 45 35 / 0.18)` | `0 8px 32px rgb(0 0 0 / 0.55)` | Soft depth for raised glass |
+| `--shadow-glow` | `0 4px 18px rgb(14 124 102 / 0.4)` | `0 4px 18px rgb(63 181 155 / 0.35)` | Green glow for primary actions |
+
+Mechanics (all in `tokens.css`):
+- `body` and every `.bg-bg` element paint `--aurora-image` over `--bg` with `background-attachment: fixed`, so glass panels blur a stable ambient wash.
+- Every `.bg-surface` element automatically gets `backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate))` — no per-component blur classes needed.
+- `.glass-rim` adds the specular top edge (`inset 0 1px 0 rgb(255 255 255 / 0.25)`) + `--shadow-pop`; used on raised panels (dialogs, menus, toasts, command palette, composer, auth/settings cards, floating chips).
 
 ## Color tokens
 
 | Token | Light | Dark | Purpose |
 | --- | --- | --- | --- |
-| `--bg` | `#FAFAF9` | `#151514` | Application background |
-| `--surface` | `#FFFFFF` | `#1C1C1B` | Primary card & surface background |
-| `--surface-subtle` | `#F4F4F2` | `#242422` | Secondary/subtle background |
-| `--border` | `#E4E4E0` | `#333330` | Default border |
-| `--border-strong` | `#CFCFC9` | `#46463F` | Emphasized border |
-| `--text` | `#1C1C1A` | `#ECECE8` | Primary text |
-| `--text-secondary` | `#5C5C57` | `#A8A8A1` | Secondary text |
-| `--text-tertiary` | `#6B6B65` | `#8A8A83` | Muted/tertiary text |
-| `--accent` | `#0E7C66` | `#3FB59B` | Primary action & highlight |
-| `--accent-hover` | `#0A6552` | `#5CC7AF` | Accent hover state |
-| `--accent-subtle` | `#E6F3EF` | `#17302A` | Accent tint background |
+| `--bg` | `#EAF2EC` | `#0A120E` | Base background under the aurora |
+| `--border` | `rgb(16 45 35 / 0.1)` | `rgb(255 255 255 / 0.09)` | Hairline separators inside panels |
+| `--border-strong` | `rgb(16 45 35 / 0.2)` | `rgb(255 255 255 / 0.16)` | Emphasized border (inputs) |
+| `--text` | `#12211B` | `#E9F0EA` | Primary text |
+| `--text-secondary` | `#46554E` | `#A5B4AA` | Secondary text |
+| `--text-tertiary` | `#5F6F67` | `#85938A` | Muted/tertiary text |
+| `--accent` | `#0E7C66` | `#3FB59B` | Primary action & highlight (green, unchanged) |
+| `--accent-hover` | `#0A6552` | `#5CC7AF` | Accent hover / gradient bottom stop |
+| `--accent-subtle` | `rgb(14 124 102 / 0.12)` | `rgb(63 181 155 / 0.16)` | Accent tint background (selected rows) |
 | `--success` | `#1A7F4B` | `#4CC38A` | Success indicator |
 | `--warning` | `#9A6700` | `#E3B341` | Warning indicator |
 | `--danger` | `#B42318` | `#F97066` | Destructive/error indicator |
 
-Tailwind classes: `bg-bg`, `bg-surface`, `bg-surface-subtle`, `border-border`, `border-border-strong`, `text-text`, `text-text-secondary`, `text-text-tertiary`, `bg-accent`, `text-accent`, `bg-accent-subtle`, `text-success`, `text-warning`, `text-danger`, etc.
+Tailwind classes: `bg-bg`, `bg-surface`, `bg-surface-subtle`, `border-glass-border`, `border-border`, `border-border-strong`, `text-text`, `text-text-secondary`, `text-text-tertiary`, `bg-accent`, `text-accent`, `bg-accent-subtle`, `shadow-pop`, `shadow-glow`, `rounded-control`, `rounded-dialog`, etc.
+
+Primary buttons: vertical gradient `from-accent to-accent-hover` + `shadow-glow` + `hover:brightness-110`. Secondary buttons: glass (`bg-surface` + `border-glass-border` + `shadow-pop`).
 
 Status is **never colour alone**: `StatusChip` always renders icon + plain-text label (`packages/ui/src/lib/status-meta.ts` maps status → label key, tone, icon; covered by tests).
 
-## Typography
+## Typography (unchanged)
 
 - **Font**: Inter Variable, self-hosted (`@fontsource-variable/inter`, Latin + Cyrillic), fallback `system-ui, "Segoe UI", Roboto, sans-serif`. Monospace (system) only for URLs, tokens, code.
 - **Scale** (Tailwind `fontSize`, px/line-height): `xs` 12/16, `sm` 13/18, `base` 14/20 (default UI), `md` 16/24, `lg` 18/26, `xl` 22/28, `2xl` 28/34, `reading` 16/26 (extracted text & notes, measure 65–75 ch).
@@ -37,11 +55,17 @@ Status is **never colour alone**: `StatusChip` always renders icon + plain-text 
 
 - **Base unit** 4 px; steps 4, 8, 12, 16, 24, 32, 48, 64 (default Tailwind spacing scale).
 - **Containers** (Tailwind `maxWidth`): feed & composer `max-w-feed` 720 px, item detail `max-w-detail` 760 px, settings `max-w-settings` 640 px, auth form `max-w-auth-form` 400 px. Breakpoints 640 / 768 / 1024 / 1280 (Tailwind defaults).
-- **Controls**: 36 px high desktop (`h-9`), 44 px min touch targets mobile (`max-sm:h-11`). List rows: 12 px vertical padding, 1 px dividers.
-- **Radii**: `rounded-control` 6 px (controls, chips), `rounded-dialog` 10 px (dialogs, popovers). No other radii; fully-rounded only for the avatar.
-- **Elevation**: 1 px borders; a single soft shadow token `shadow-pop` for popovers, dialogs and toasts only. No nested cards.
+- **Controls**: 36 px high desktop (`h-9`), 44 px min touch targets mobile (`max-sm:h-11`). List rows: 12 px vertical padding, 1 px hairline dividers.
+- **Radii** (increased for the glass look): `rounded-control` 10 px (controls, chips), `rounded-dialog` 18 px (dialogs, popovers, raised panels). Fully-rounded only for the avatar.
+- **Elevation**: glass rims + `--shadow-pop`; `--shadow-glow` only on primary actions. No nested opaque cards — inner panels stay translucent.
 - **Icons**: lucide, 20 px (16 px dense rows), `strokeWidth={1.5}`, outline only.
-- **Motion**: 120–180 ms (`duration-150`) `ease-out` on opacity/transform only; `prefers-reduced-motion` disables transitions globally.
+- **Motion**: 120–180 ms (`duration-150`) `ease-out` on opacity/transform/filter only; `prefers-reduced-motion` disables transitions globally. No looping animation.
 - **Focus**: 2 px accent ring, 2 px offset, on `:focus-visible` (defined in tokens.css).
-- **Sidebar**: `--sidebar-width` 264 px, `--sidebar-rail-width` 64 px.
+- **Sidebar**: `--sidebar-width` 264 px, `--sidebar-rail-width` 64 px — glass panel over the aurora.
 - **Safe areas**: body padding + composer padding use `env(safe-area-inset-*)`.
+- **Modal overlays**: `bg-black/30 backdrop-blur-sm` (frosted dimming).
+
+## Performance notes
+
+- `backdrop-filter` is applied to panels via a single `.bg-surface` rule; feed rows are translucent panels over a fixed background — avoid adding blur to deeply nested small elements.
+- The aurora is painted once per themed root (`body`, `.bg-bg`), not per component.

@@ -135,7 +135,7 @@ export function SearchScreen() {
       {showFilters && (
         <div
           className={cn(
-            "mt-3 grid grid-cols-1 gap-3 rounded-dialog border border-border bg-surface p-4 sm:grid-cols-2 lg:grid-cols-3",
+            "mt-3 grid grid-cols-1 gap-3 rounded-dialog border border-glass-border bg-surface p-4 sm:grid-cols-2 lg:grid-cols-3",
           )}
           role="group"
           aria-label={t("search.filters")}
@@ -252,7 +252,7 @@ export function SearchScreen() {
             <p className="mb-2 text-sm text-text-tertiary tnum" aria-live="polite">
               {t("search.resultsCount", { count: searchQuery.data.length })}
             </p>
-            <div className="overflow-hidden rounded-dialog border border-border bg-surface">
+            <div className="overflow-hidden rounded-dialog border border-glass-border bg-surface">
               {searchQuery.data.map((r) => (
                 <ItemCard
                   key={r.item.id}

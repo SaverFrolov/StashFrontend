@@ -116,7 +116,7 @@ export const ItemCard = memo(function ItemCard({
       role={selectionMode ? "option" : undefined}
       aria-selected={selectionMode ? selected : undefined}
       className={cn(
-        "group relative border-b border-border bg-surface px-4 py-3 transition-colors duration-150 ease-out",
+        "group relative border-b border-glass-border bg-surface px-4 py-3 transition-colors duration-150 ease-out",
         onOpen && "cursor-pointer hover:bg-surface-subtle",
         active && "bg-accent-subtle hover:bg-accent-subtle",
         selected && "bg-accent-subtle",
@@ -225,7 +225,7 @@ export const ItemCard = memo(function ItemCard({
       {/* Hover quick actions (desktop only) */}
       {!selectionMode && (
         <div
-          className="absolute right-3 top-9 hidden items-center gap-0.5 rounded-control border border-border bg-surface p-0.5 shadow-pop group-hover:flex max-lg:hidden"
+          className="absolute right-3 top-9 hidden items-center gap-0.5 rounded-control border border-glass-border bg-surface p-0.5 glass-rim group-hover:flex max-lg:hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {onAddToCollection && (

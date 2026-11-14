@@ -273,7 +273,7 @@ export function Composer() {
       <div className="mx-auto max-w-feed">
         {recorderState !== "idle" && recorderState !== "recorded" && (
           /* Recorder bar: discard, elapsed, live level, pause/resume, stop */
-          <div className="flex items-center gap-3 rounded-dialog border border-border bg-surface px-3 py-2" role="group" aria-label={t("recorder.recording")}>
+          <div className="flex items-center gap-3 rounded-dialog border border-glass-border bg-surface px-3 py-2" role="group" aria-label={t("recorder.recording")}>
             <button
               type="button"
               aria-label={t("recorder.discard")}
@@ -331,7 +331,7 @@ export function Composer() {
 
         {recorderState === "recorded" && recordedUrl && (
           /* Inline player with Send and Discard */
-          <div className="flex items-center gap-3 rounded-dialog border border-border bg-surface px-3 py-2">
+          <div className="flex items-center gap-3 rounded-dialog border border-glass-border bg-surface px-3 py-2">
             <button
               type="button"
               aria-label={t("recorder.discard")}
@@ -367,7 +367,7 @@ export function Composer() {
               aria-label={t("composer.send")}
               onClick={() => recordedBlob && saveAudio.mutate(recordedBlob)}
               disabled={saveAudio.isPending}
-              className="flex h-9 items-center gap-2 rounded-control bg-accent px-4 text-base font-medium text-white hover:bg-accent-hover disabled:opacity-50"
+              className="flex h-9 items-center gap-2 rounded-control bg-gradient-to-b from-accent to-accent-hover px-4 text-base font-medium text-white shadow-glow hover:brightness-110 disabled:opacity-50"
             >
               <Send size={16} strokeWidth={1.5} aria-hidden />
               {t("composer.send")}
@@ -376,7 +376,7 @@ export function Composer() {
         )}
 
         {recorderState === "idle" && (
-          <div className="rounded-dialog border border-border bg-surface shadow-pop">
+          <div className="rounded-dialog border border-glass-border bg-surface glass-rim">
             {urlPreview && (
               <p className="flex items-center gap-2 border-b border-border px-3 py-1.5 text-xs text-text-tertiary">
                 <Link2 size={12} strokeWidth={1.5} aria-hidden />
@@ -411,7 +411,7 @@ export function Composer() {
                   title={`${t("composer.send")} (${t("shortcuts.send")})`}
                   onClick={submit}
                   disabled={saveText.isPending}
-                  className="mb-0.5 flex h-9 w-9 items-center justify-center rounded-control bg-accent text-white hover:bg-accent-hover disabled:opacity-50"
+                  className="mb-0.5 flex h-9 w-9 items-center justify-center rounded-control bg-gradient-to-b from-accent to-accent-hover text-white shadow-glow hover:brightness-110 disabled:opacity-50"
                 >
                   <Send size={16} strokeWidth={1.5} aria-hidden />
                 </button>
