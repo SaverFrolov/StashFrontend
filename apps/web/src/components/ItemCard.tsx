@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   File as FileIcon,
@@ -87,6 +87,10 @@ export const ItemCard = memo(function ItemCard({
   active,
 }: ItemCardProps) {
   const { t } = useTranslation();
+  // Keep the hover action strip mounted while the "more" menu is open:
+  // the portalled menu moves the pointer off the card, and hiding the strip
+  // would unmount the trigger and make the menu jump.
+  const [moreOpen, setMoreOpen] = useState(false);
   const showStatus = item.status !== "done";
 
   let pressTimer: number | undefined;
@@ -225,7 +229,10 @@ export const ItemCard = memo(function ItemCard({
       {/* Hover quick actions (desktop only) */}
       {!selectionMode && (
         <div
-          className="absolute right-3 top-9 hidden items-center gap-0.5 rounded-control border border-glass-border bg-surface p-0.5 glass-rim group-hover:flex max-lg:hidden"
+          className={cn(
+            "absolute right-3 top-9 hidden items-center gap-0.5 rounded-control border border-glass-border bg-surface p-0.5 glass-rim group-hover:flex max-lg:hidden",
+            moreOpen && "flex",
+          )}
           onClick={(e) => e.stopPropagation()}
         >
           {onAddToCollection && (
@@ -262,7 +269,7 @@ export const ItemCard = memo(function ItemCard({
             </button>
           )}
           {onMore && (
-            <Menu>
+            <Menu open={moreOpen} onOpenChange={setMoreOpen}>
               <MenuTrigger asChild>
                 <button
                   type="button"
