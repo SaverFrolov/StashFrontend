@@ -114,7 +114,12 @@ function AppShellInner() {
           <button
             type="button"
             onClick={openPalette}
-            className="ml-2 flex h-9 min-w-0 max-w-md flex-1 items-center gap-2 rounded-control border border-accent/40 bg-surface-subtle px-3 text-base text-text-tertiary hover:border-accent"
+            className={cn(
+              "ml-2 h-9 min-w-0 max-w-md flex-1 items-center gap-2 rounded-control border border-accent/40 bg-surface-subtle px-3 text-base text-text-tertiary hover:border-accent",
+              // when the condensed filter bar docks right, the search trigger
+              // yields space below xl to avoid overlapping it
+              condensed ? "hidden xl:flex" : "flex",
+            )}
           >
             <Search size={16} strokeWidth={1.5} aria-hidden />
             <span className="truncate">{t("modals.commandPalettePlaceholder")}</span>
