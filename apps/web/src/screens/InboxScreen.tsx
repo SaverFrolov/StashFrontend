@@ -62,7 +62,9 @@ export function Feed({
   const condensed = compact ? false : header?.condensed ?? false;
   const condensedRef = useRef(condensed);
   condensedRef.current = condensed;
-  const isDockable = useMediaQuery("(min-width: 768px)");
+  // Docking only where the desktop header exists (lg+); below that the bar
+  // stays a compact row of its own under the mobile header.
+  const isDockable = useMediaQuery("(min-width: 1024px)");
   const barRef = useRef<HTMLDivElement>(null);
   const fadeRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
