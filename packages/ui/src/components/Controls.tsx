@@ -12,19 +12,23 @@ export function SegmentedControl<T extends string>({
   onChange,
   ariaLabel,
   className,
+  compact,
 }: {
   options: SegmentOption<T>[];
   value: T;
   onChange: (value: T) => void;
   ariaLabel: string;
   className?: string;
+  /** Lower height and tighter padding; tap targets stay >= 32px. */
+  compact?: boolean;
 }) {
   return (
     <div
       role="tablist"
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-control border border-border bg-surface-subtle p-1 [scrollbar-width:none]",
+        "inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-control border border-border bg-surface-subtle [scrollbar-width:none]",
+        compact ? "p-0.5" : "p-1",
         className,
       )}
     >
@@ -39,7 +43,8 @@ export function SegmentedControl<T extends string>({
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(opt.value)}
             className={cn(
-              "h-7 shrink-0 whitespace-nowrap rounded-[4px] px-3 text-sm font-medium transition-colors duration-150 ease-out max-sm:h-8",
+              "shrink-0 whitespace-nowrap rounded-[4px] text-sm font-medium transition-colors duration-150 ease-out",
+              compact ? "h-8 px-2.5 max-sm:h-8" : "h-7 px-3 max-sm:h-8",
               selected
                 ? "bg-surface text-text shadow-[0_1px_2px_rgb(0_0_0/0.08)] border border-border"
                 : "border border-transparent text-text-secondary hover:text-text",

@@ -116,7 +116,7 @@ export const ItemCard = memo(function ItemCard({
       role={selectionMode ? "option" : undefined}
       aria-selected={selectionMode ? selected : undefined}
       className={cn(
-        "group relative border-b border-glass-border bg-surface px-4 py-3 transition-colors duration-150 ease-out",
+        "group relative mb-2 rounded-[14px] border border-glass-border bg-surface px-4 py-3 transition-colors duration-150 ease-out last:mb-0",
         onOpen && "cursor-pointer hover:bg-surface-subtle",
         active && "bg-accent-subtle hover:bg-accent-subtle",
         selected && "bg-accent-subtle",

@@ -102,11 +102,13 @@ export function Sidebar({
 
   return (
     <div className="flex h-full flex-col">
-      {/* Wordmark */}
+      {/* Wordmark — hidden entirely in the collapsed rail */}
       <div className={cn("flex h-14 items-center border-b border-border px-4", collapsed && "lg:justify-center lg:px-0")}>
-        <span className="text-md font-semibold tracking-tight text-text" title={APP_NAME}>
-          {collapsed ? APP_NAME.slice(0, 1) : APP_NAME}
-        </span>
+        {!collapsed && (
+          <span className="text-md font-semibold tracking-tight text-text" title={APP_NAME}>
+            {APP_NAME}
+          </span>
+        )}
         {onToggleCollapse && collapseLabel && (
           <button
             type="button"
