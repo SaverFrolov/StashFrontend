@@ -80,9 +80,9 @@ export function SearchScreen() {
   const effectiveMode = mode === "meaning" && !features.semanticSearch ? "keywords" : mode;
 
   return (
-    <div className="mx-auto flex w-full max-w-feed flex-1 flex-col px-3 pb-8">
+    <div className="mx-auto flex w-full max-w-feed min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-8">
       {/* Large search input */}
-      <div className="mt-4 flex items-center gap-3 rounded-dialog border border-border-strong bg-surface px-4 focus-within:border-accent">
+      <div className="mt-4 flex items-center gap-3 rounded-dialog border border-accent/40 bg-surface px-4 focus-within:border-accent">
         <SearchIcon size={20} strokeWidth={1.5} className="shrink-0 text-text-tertiary" aria-hidden />
         <input
           value={query}

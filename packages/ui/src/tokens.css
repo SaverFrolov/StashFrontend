@@ -4,11 +4,11 @@
 
 :root {
   --bg: #eaf2ec;
-  --surface: rgb(255 255 255 / 0.55);
-  --surface-subtle: rgb(255 255 255 / 0.32);
-  --border: rgb(16 45 35 / 0.1);
-  --border-strong: rgb(16 45 35 / 0.2);
-  --glass-border: rgb(16 45 35 / 0.1);
+  --surface: rgb(244 250 246 / 0.66);
+  --surface-subtle: rgb(234 244 237 / 0.45);
+  --border: rgb(14 124 102 / 0.14);
+  --border-strong: rgb(14 124 102 / 0.28);
+  --glass-border: rgb(14 124 102 / 0.18);
   --text: #12211b;
   --text-secondary: #46554e;
   --text-tertiary: #5f6f67;
@@ -46,9 +46,9 @@
   --bg: #0a120e;
   --surface: rgb(22 34 28 / 0.55);
   --surface-subtle: rgb(30 44 37 / 0.45);
-  --border: rgb(255 255 255 / 0.09);
-  --border-strong: rgb(255 255 255 / 0.16);
-  --glass-border: rgb(255 255 255 / 0.09);
+  --border: rgb(63 181 155 / 0.12);
+  --border-strong: rgb(63 181 155 / 0.22);
+  --glass-border: rgb(63 181 155 / 0.16);
   --text: #e9f0ea;
   --text-secondary: #a5b4aa;
   --text-tertiary: #85938a;
@@ -75,9 +75,9 @@
     --bg: #0a120e;
     --surface: rgb(22 34 28 / 0.55);
     --surface-subtle: rgb(30 44 37 / 0.45);
-    --border: rgb(255 255 255 / 0.09);
-    --border-strong: rgb(255 255 255 / 0.16);
-    --glass-border: rgb(255 255 255 / 0.09);
+    --border: rgb(63 181 155 / 0.12);
+    --border-strong: rgb(63 181 155 / 0.22);
+    --glass-border: rgb(63 181 155 / 0.16);
     --text: #e9f0ea;
     --text-secondary: #a5b4aa;
     --text-tertiary: #85938a;

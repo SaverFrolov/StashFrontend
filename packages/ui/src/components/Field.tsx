@@ -100,7 +100,7 @@ export function Switch({ checked, onCheckedChange, label, id }: SwitchProps) {
         className="relative h-6 w-11 shrink-0 rounded-full border border-border-strong bg-surface-subtle data-[state=checked]:border-accent data-[state=checked]:bg-accent"
         role="switch"
       >
-        <SwitchPrimitive.Thumb className="block h-[18px] w-[18px] translate-x-[3px] rounded-full bg-text-secondary transition-transform duration-150 ease-out will-change-transform data-[state=checked]:translate-x-[23px] data-[state=checked]:bg-white" />
+        <SwitchPrimitive.Thumb className="block h-[18px] w-[18px] translate-x-[3px] rounded-full bg-text-secondary transition-transform duration-150 ease-out will-change-transform data-[state=checked]:translate-x-[23px] data-[state=checked]:bg-[#f2f9f4]" />
       </SwitchPrimitive.Root>
     </div>
   );

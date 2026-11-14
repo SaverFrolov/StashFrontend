@@ -96,7 +96,7 @@ export function TagsScreen() {
   const sortedTags = useMemo(() => [...(tags ?? [])].sort((a, b) => a.name.localeCompare(b.name)), [tags]);
 
   return (
-    <div className="mx-auto w-full max-w-feed flex-1 px-3 pb-8">
+    <div className="mx-auto w-full max-w-feed min-h-0 flex-1 overflow-y-auto px-3 pb-8">
       <div className="mt-4 flex items-center justify-between gap-2">
         <h1 className="text-xl font-semibold text-text">{t("tags.title")}</h1>
         <Button

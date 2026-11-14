@@ -6,7 +6,7 @@ import { Button } from "@inbox/ui";
 export function NotFoundScreen() {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-center">
+    <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 overflow-y-auto p-6 text-center">
       <p className="tnum text-2xl font-semibold text-text-tertiary">404</p>
       <h1 className="text-xl font-semibold text-text">{t("system.notFoundTitle")}</h1>
       <p className="max-w-sm text-base text-text-secondary">{t("system.notFoundBody")}</p>

@@ -8,9 +8,9 @@ Character (updated 2026-11-14 at the user's request; supersedes spec section 8 p
 
 | Token | Light | Dark | Purpose |
 | --- | --- | --- | --- |
-| `--surface` | `rgb(255 255 255 / 0.55)` | `rgb(22 34 28 / 0.55)` | Translucent panel background |
-| `--surface-subtle` | `rgb(255 255 255 / 0.32)` | `rgb(30 44 37 / 0.45)` | Subtle translucent fill (hover, insets) |
-| `--glass-border` | `rgb(255 255 255 / 0.65)` | `rgb(255 255 255 / 0.14)` | Bright glass rim on raised panels |
+| `--surface` | `rgb(244 250 246 / 0.66)` | `rgb(22 34 28 / 0.55)` | Translucent panel background (green-tinted, no white) |
+| `--surface-subtle` | `rgb(234 244 237 / 0.45)` | `rgb(30 44 37 / 0.45)` | Subtle translucent fill (hover, insets) |
+| `--glass-border` | `rgb(14 124 102 / 0.18)` | `rgb(63 181 155 / 0.16)` | Green-tinted hairline on raised panels |
 | `--glass-blur` | `20px` | `20px` | Frosted blur amount |
 | `--glass-saturate` | `160%` | `160%` | Backdrop saturation boost |
 | `--aurora-image` | green radial washes | deeper green washes | Ambient background (fixed attachment) |
@@ -20,15 +20,16 @@ Character (updated 2026-11-14 at the user's request; supersedes spec section 8 p
 Mechanics (all in `tokens.css`):
 - `body` and every `.bg-bg` element paint `--aurora-image` over `--bg` with `background-attachment: fixed`, so glass panels blur a stable ambient wash.
 - Every `.bg-surface` element automatically gets `backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate))` — no per-component blur classes needed.
-- `.glass-rim` adds the specular top edge (`inset 0 1px 0 rgb(255 255 255 / 0.25)`) + `--shadow-pop`; used on raised panels (dialogs, menus, toasts, command palette, composer, auth/settings cards, floating chips).
+- `.glass-rim` adds the soft `--shadow-pop` depth only (no specular white inset lines — removed per user feedback; every hairline in the app is green-tinted, white is not used anywhere except text on accent buttons).
+- Brighter green outlines (`border-accent/40`) are reserved for the sticky date separator chips and the search entry points (search screen input, header palette trigger).
 
 ## Color tokens
 
 | Token | Light | Dark | Purpose |
 | --- | --- | --- | --- |
 | `--bg` | `#EAF2EC` | `#0A120E` | Base background under the aurora |
-| `--border` | `rgb(16 45 35 / 0.1)` | `rgb(255 255 255 / 0.09)` | Hairline separators inside panels |
-| `--border-strong` | `rgb(16 45 35 / 0.2)` | `rgb(255 255 255 / 0.16)` | Emphasized border (inputs) |
+| `--border` | `rgb(14 124 102 / 0.14)` | `rgb(63 181 155 / 0.12)` | Hairline separators inside panels (green-tinted) |
+| `--border-strong` | `rgb(14 124 102 / 0.28)` | `rgb(63 181 155 / 0.22)` | Emphasized border (inputs) |
 | `--text` | `#12211B` | `#E9F0EA` | Primary text |
 | `--text-secondary` | `#46554E` | `#A5B4AA` | Secondary text |
 | `--text-tertiary` | `#5F6F67` | `#85938A` | Muted/tertiary text |

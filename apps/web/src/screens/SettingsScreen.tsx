@@ -43,7 +43,7 @@ export function SettingsScreen() {
   const { t } = useTranslation();
 
   return (
-    <div className="mx-auto w-full max-w-settings flex-1 px-3 pb-12">
+    <div className="mx-auto w-full max-w-settings min-h-0 flex-1 overflow-y-auto px-3 pb-12">
       <h1 className="mt-4 text-xl font-semibold text-text">{t("settings.title")}</h1>
 
       {/* Mobile: top tabs */}

@@ -1,10 +1,10 @@
 :root {
   --bg: #eaf2ec;
-  --surface: rgba(255, 255, 255, 0.55);
-  --surface-subtle: rgba(255, 255, 255, 0.32);
-  --border: rgba(16, 45, 35, 0.1);
-  --border-strong: rgba(16, 45, 35, 0.2);
-  --glass-border: rgba(16, 45, 35, 0.1);
+  --surface: rgba(244, 250, 246, 0.66);
+  --surface-subtle: rgba(234, 244, 237, 0.45);
+  --border: rgba(14, 124, 102, 0.14);
+  --border-strong: rgba(14, 124, 102, 0.28);
+  --glass-border: rgba(14, 124, 102, 0.18);
   --text: #12211b;
   --text-secondary: #46554e;
   --text-tertiary: #5f6f67;
