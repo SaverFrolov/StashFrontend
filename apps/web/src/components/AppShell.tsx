@@ -51,7 +51,7 @@ function AppShellInner() {
   const sidebarWidth = useMemo(() => (collapsed ? "lg:w-16" : "lg:w-[264px]"), [collapsed]);
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-bg">
+    <div className="flex h-screen h-dvh overflow-hidden bg-bg">
       {/* Desktop sidebar */}
       <aside
         className={cn(

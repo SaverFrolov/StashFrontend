@@ -38,9 +38,9 @@ interface Db {
 
 function freshDb(): Db {
   return {
-    items: structuredClone(seedItems),
-    collections: structuredClone(seedCollections),
-    tags: structuredClone(seedTags),
+    items: clone(seedItems),
+    collections: clone(seedCollections),
+    tags: clone(seedTags),
     aiSettings: {
       provider: "openai",
       baseUrl: "https://api.example-ai.test/v1",
@@ -63,6 +63,13 @@ function delay(): Promise<void> {
 
 function uid(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/** structuredClone where available (Chrome 98+/Safari 15.4+), JSON fallback elsewhere. */
+function clone<T>(value: T): T {
+  return typeof globalThis.structuredClone === "function"
+    ? globalThis.structuredClone(value)
+    : (JSON.parse(JSON.stringify(value)) as T);
 }
 
 function domainOf(url: string): string {
@@ -248,7 +255,7 @@ export class MockApi implements ApiClient {
     await delay();
     const item = this.db.items.find((i) => i.id === id);
     if (!item) throw new Error(`Item ${id} not found`);
-    return structuredClone(item);
+    return clone(item);
   }
 
   private newItem(partial: Pick<Item, "type" | "status" | "title"> & Partial<Item>): Item {
@@ -345,7 +352,7 @@ export class MockApi implements ApiClient {
     this.db.items.push(item);
     this.persist();
     if (this.db.aiSettings.autoProcess) this.runPipeline(item, text);
-    return structuredClone(item);
+    return clone(item);
   }
 
   async saveLink(input: SaveLinkInput): Promise<Item> {
@@ -362,7 +369,7 @@ export class MockApi implements ApiClient {
     this.db.items.push(item);
     this.persist();
     if (this.db.aiSettings.autoProcess) this.runPipeline(item, "");
-    return structuredClone(item);
+    return clone(item);
   }
 
   async saveFile(input: SaveFileInput): Promise<Item> {
@@ -387,7 +394,7 @@ export class MockApi implements ApiClient {
     } else if (this.db.aiSettings.autoProcess) {
       this.runPipeline(item, "");
     }
-    return structuredClone(item);
+    return clone(item);
   }
 
   /** Transcription is unavailable in the mock: audio always ends as partial. */
@@ -416,7 +423,7 @@ export class MockApi implements ApiClient {
     this.db.items.push(item);
     this.persist();
     this.scheduleAudioPartial(item);
-    return structuredClone(item);
+    return clone(item);
   }
 
   async patchItem(id: string, patch: ItemPatch): Promise<Item> {
@@ -447,7 +454,7 @@ export class MockApi implements ApiClient {
     if (patch.lang !== undefined) item.lang = patch.lang;
     this.persist();
     this.touchItem(id);
-    return structuredClone(item);
+    return clone(item);
   }
 
   async deleteItems(ids: string[]): Promise<void> {
@@ -465,7 +472,7 @@ export class MockApi implements ApiClient {
     item.ai.tags = [];
     item.suggestedTags = [];
     this.runPipeline(item, item.extracted.text ?? item.original.text ?? "");
-    return structuredClone(item);
+    return clone(item);
   }
 
   async retryExtraction(id: string): Promise<Item> {
@@ -473,7 +480,7 @@ export class MockApi implements ApiClient {
     const item = this.db.items.find((i) => i.id === id);
     if (!item) throw new Error(`Item ${id} not found`);
     this.runPipeline(item, item.extracted.text ?? item.original.text ?? "");
-    return structuredClone(item);
+    return clone(item);
   }
 
   async attentionCount(): Promise<{ count: number }> {
@@ -500,7 +507,7 @@ export class MockApi implements ApiClient {
       .filter((s) => s.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, limit);
-    return scored.map((s) => structuredClone(s.item));
+    return scored.map((s) => clone(s.item));
   }
 
   // ---- search ----
@@ -539,18 +546,18 @@ export class MockApi implements ApiClient {
       const keywordHits = words.filter((w) => lower.includes(w));
       if (filters.mode === "keywords") {
         if (keywordHits.length === words.length && words.length > 0) {
-          results.push({ item: structuredClone(item), snippet: this.snippet(item, keywordHits[0]), matchKind: "keyword" });
+          results.push({ item: clone(item), snippet: this.snippet(item, keywordHits[0]), matchKind: "keyword" });
         }
       } else if (filters.mode === "meaning") {
         // Mock semantic match: any overlap of >= 4-char stem counts as "meaning".
         if (keywordHits.length > 0 || words.some((w) => lower.includes(w.slice(0, Math.max(4, w.length - 2))))) {
-          results.push({ item: structuredClone(item), snippet: this.snippet(item, keywordHits[0] ?? words[0]), matchKind: "meaning" });
+          results.push({ item: clone(item), snippet: this.snippet(item, keywordHits[0] ?? words[0]), matchKind: "meaning" });
         }
       } else {
         if (keywordHits.length === words.length && words.length > 0) {
-          results.push({ item: structuredClone(item), snippet: this.snippet(item, keywordHits[0]), matchKind: "keyword" });
+          results.push({ item: clone(item), snippet: this.snippet(item, keywordHits[0]), matchKind: "keyword" });
         } else if (words.some((w) => lower.includes(w.slice(0, Math.max(4, w.length - 2))))) {
-          results.push({ item: structuredClone(item), snippet: this.snippet(item, words[0]), matchKind: "meaning" });
+          results.push({ item: clone(item), snippet: this.snippet(item, words[0]), matchKind: "meaning" });
         }
       }
     }
@@ -576,7 +583,7 @@ export class MockApi implements ApiClient {
 
   async listCollections(): Promise<Collection[]> {
     await delay();
-    return structuredClone(this.db.collections);
+    return clone(this.db.collections);
   }
 
   async createCollection(name: string, description?: string): Promise<Collection> {
@@ -590,14 +597,14 @@ export class MockApi implements ApiClient {
     };
     this.db.collections.push(col);
     this.persist();
-    return structuredClone(col);
+    return clone(col);
   }
 
   async getCollection(id: string): Promise<Collection> {
     await delay();
     const col = this.db.collections.find((c) => c.id === id);
     if (!col) throw new Error(`Collection ${id} not found`);
-    return structuredClone(col);
+    return clone(col);
   }
 
   async patchCollection(id: string, patch: CollectionPatch): Promise<Collection> {
@@ -608,7 +615,7 @@ export class MockApi implements ApiClient {
     if (patch.description !== undefined) col.description = patch.description.trim() || undefined;
     col.updatedAt = new Date().toISOString();
     this.persist();
-    return structuredClone(col);
+    return clone(col);
   }
 
   async deleteCollection(id: string): Promise<void> {
@@ -656,7 +663,7 @@ export class MockApi implements ApiClient {
       }
     }
     this.persist();
-    return structuredClone(this.db.tags);
+    return clone(this.db.tags);
   }
 
   async renameTag(id: string, name: string): Promise<Tag> {
@@ -671,7 +678,7 @@ export class MockApi implements ApiClient {
       item.ai.tags = item.ai.tags.map((t) => (t === old ? tag.name : t));
     }
     this.persist();
-    return structuredClone(tag);
+    return clone(tag);
   }
 
   async mergeTags(sourceIds: string[], targetId: string): Promise<Tag> {
@@ -687,7 +694,7 @@ export class MockApi implements ApiClient {
     }
     this.db.tags = this.db.tags.filter((t) => !sourceIds.includes(t.id));
     this.persist();
-    return structuredClone(target);
+    return clone(target);
   }
 
   async deleteTag(id: string): Promise<void> {
@@ -747,7 +754,7 @@ export class MockApi implements ApiClient {
 
   async listApiTokens(): Promise<ApiToken[]> {
     await delay();
-    return structuredClone(this.db.apiTokens);
+    return clone(this.db.apiTokens);
   }
 
   async createApiToken(name: string, expiresInDays?: number): Promise<{ token: ApiToken; secret: string }> {
@@ -760,7 +767,7 @@ export class MockApi implements ApiClient {
     };
     this.db.apiTokens.push(token);
     this.persist();
-    return { token: structuredClone(token), secret: `inb_${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}` };
+    return { token: clone(token), secret: `inb_${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}` };
   }
 
   async revokeApiToken(id: string): Promise<void> {
@@ -780,7 +787,7 @@ export class MockApi implements ApiClient {
       items = items.filter((i) => options.itemIds!.includes(i.id));
     }
     const stripped = items.map((i) => {
-      const copy = structuredClone(i);
+      const copy = clone(i);
       if (!options.includeOriginals) copy.original = {};
       if (!options.includeExtracted) copy.extracted = {};
       if (!options.includeAi) copy.ai = { tags: [], model: copy.ai.model, edited: false };

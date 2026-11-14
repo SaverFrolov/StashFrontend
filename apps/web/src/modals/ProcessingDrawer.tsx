@@ -50,7 +50,7 @@ export function ProcessingDrawer({
       <DialogContent
         title={t("modals.processingTitle")}
         closeLabel={t("common.close")}
-        className="sm:left-auto sm:right-0 sm:top-0 sm:h-dvh sm:max-h-dvh sm:max-w-[400px] sm:translate-x-0 sm:translate-y-0 sm:rounded-l-dialog sm:rounded-r-none"
+        className="sm:left-auto sm:right-0 sm:top-0 sm:h-screen sm:h-dvh sm:max-h-screen sm:max-h-dvh sm:max-w-[400px] sm:translate-x-0 sm:translate-y-0 sm:rounded-l-dialog sm:rounded-r-none"
       >
         <ol className="flex flex-col gap-3" aria-label={t("item.processingDetails")}>
           {item.processing.map((step, i) => (

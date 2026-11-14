@@ -400,7 +400,7 @@ function CaptureSection() {
             variant="ghost"
             aria-label={t("common.copy")}
             onClick={() => {
-              void navigator.clipboard.writeText(serverUrl);
+              void navigator.clipboard?.writeText(serverUrl);
               toast.toast({ variant: "success", message: t("common.copied") });
             }}
           >
@@ -505,7 +505,7 @@ function CaptureSection() {
             <Button
               variant="primary"
               onClick={() => {
-                void navigator.clipboard.writeText(revealedSecret ?? "");
+                void navigator.clipboard?.writeText(revealedSecret ?? "");
                 toast.toast({ variant: "success", message: t("common.copied") });
               }}
             >

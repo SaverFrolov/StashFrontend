@@ -145,7 +145,7 @@ export function CaptureScreen() {
 
   if (saved) {
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-bg p-6">
+      <div className="flex min-h-screen min-h-dvh flex-col items-center justify-center gap-4 bg-bg p-6">
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-subtle text-accent">
           <Check size={24} strokeWidth={1.5} aria-hidden />
         </span>
@@ -172,7 +172,7 @@ export function CaptureScreen() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col bg-bg">
+    <div className="flex min-h-screen min-h-dvh flex-col bg-bg">
       <header className="flex h-14 items-center justify-between border-b border-glass-border bg-surface px-4">
         <button
           type="button"
