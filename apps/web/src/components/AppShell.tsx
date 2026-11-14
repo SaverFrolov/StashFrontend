@@ -51,7 +51,7 @@ function AppShellInner() {
   const sidebarWidth = useMemo(() => (collapsed ? "lg:w-16" : "lg:w-[264px]"), [collapsed]);
 
   return (
-    <div className="flex min-h-dvh bg-bg">
+    <div className="flex h-dvh overflow-hidden bg-bg">
       {/* Desktop sidebar */}
       <aside
         className={cn(
@@ -82,7 +82,7 @@ function AppShellInner() {
         </div>
       )}
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         {/* Mobile top bar */}
         <header className="sticky top-0 z-30 flex h-[var(--header-h)] items-center gap-2 border-b border-glass-border bg-surface px-3 lg:hidden">
           <IconButton label={t("shell.openMenu")} onClick={() => setDrawerOpen(true)}>
@@ -114,7 +114,7 @@ function AppShellInner() {
           <button
             type="button"
             onClick={openPalette}
-            className="ml-2 flex h-9 min-w-0 max-w-md flex-1 items-center gap-2 rounded-control border border-glass-border bg-surface-subtle px-3 text-base text-text-tertiary hover:border-border-strong"
+            className="ml-2 flex h-9 min-w-0 max-w-md flex-1 items-center gap-2 rounded-control border border-accent/40 bg-surface-subtle px-3 text-base text-text-tertiary hover:border-accent"
           >
             <Search size={16} strokeWidth={1.5} aria-hidden />
             <span className="truncate">{t("modals.commandPalettePlaceholder")}</span>
@@ -139,7 +139,7 @@ function AppShellInner() {
 
         <InstallBanner />
 
-        <main id="main" className="flex min-w-0 flex-1 flex-col">
+        <main id="main" className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
           <Outlet />
         </main>
       </div>

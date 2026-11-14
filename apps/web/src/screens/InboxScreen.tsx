@@ -419,7 +419,7 @@ export function Feed({
             {grouped.map((group) => (
               <section key={group.key} aria-label={group.items[0].capturedAt}>
                 <div className="sticky top-0 z-[5] flex justify-center py-2">
-                  <span className="rounded-control border border-glass-border bg-surface px-3 py-1 text-xs font-medium text-text-secondary glass-rim">
+                  <span className="rounded-control border border-accent/40 bg-surface px-3 py-1 text-xs font-medium text-text-secondary glass-rim">
                     {formatDaySeparator(group.items[0].capturedAt, t("common.today"), t("common.yesterday"))}
                   </span>
                 </div>

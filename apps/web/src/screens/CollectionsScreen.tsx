@@ -32,7 +32,7 @@ export function CollectionsScreen() {
   });
 
   return (
-    <div className="mx-auto w-full max-w-feed flex-1 px-3 pb-8">
+    <div className="mx-auto w-full max-w-feed min-h-0 flex-1 overflow-y-auto px-3 pb-8">
       <div className="mt-4 flex items-center justify-between">
         <h1 className="text-xl font-semibold text-text">{t("collections.title")}</h1>
         <Button variant="primary" size="sm" onClick={() => openCollectionForm()}>
@@ -142,14 +142,14 @@ export function CollectionDetailScreen() {
 
   if (isPending || !collection) {
     return (
-      <div className="mx-auto w-full max-w-feed flex-1 px-3 py-4">
+      <div className="mx-auto w-full max-w-feed min-h-0 flex-1 overflow-y-auto px-3 py-4">
         <ItemCardSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-feed flex-1 px-3 pb-8">
+    <div className="mx-auto w-full max-w-feed min-h-0 flex-1 overflow-y-auto px-3 pb-8">
       <button
         type="button"
         onClick={() => navigate("/collections")}
