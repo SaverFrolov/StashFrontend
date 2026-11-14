@@ -115,7 +115,10 @@ export function Sidebar({
             onClick={onToggleCollapse}
             aria-label={collapseLabel}
             title={collapseLabel}
-            className="ml-auto hidden rounded-control p-1.5 text-text-tertiary hover:bg-surface-subtle lg:block"
+            className={cn(
+              "hidden rounded-control p-1.5 text-text-tertiary hover:bg-surface-subtle lg:block",
+              !collapsed && "ml-auto",
+            )}
           >
             <Monitor size={16} strokeWidth={1.5} aria-hidden />
           </button>
