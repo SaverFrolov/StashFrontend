@@ -16,7 +16,7 @@ export default defineConfig({
         display: "standalone",
         start_url: "/inbox",
         scope: "/",
-        background_color: "#FAFAF9",
+        background_color: "#EAF2EC",
         theme_color: "#0E7C66",
         icons: [
           { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },

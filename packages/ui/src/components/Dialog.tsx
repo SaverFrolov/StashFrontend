@@ -26,10 +26,10 @@ export function DialogContent({
 }) {
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/40" />
+      <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" />
       <DialogPrimitive.Content
         className={cn(
-          "fixed z-50 flex max-h-[85vh] w-full flex-col gap-4 overflow-y-auto rounded-t-dialog border border-border bg-surface p-6 shadow-pop",
+          "fixed z-50 flex max-h-[85vh] w-full flex-col gap-4 overflow-y-auto rounded-t-dialog border border-glass-border bg-surface p-6 shadow-pop glass-rim",
           "inset-x-0 bottom-0",
           "sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-w-[520px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-dialog",
           "pb-[max(24px,env(safe-area-inset-bottom))]",

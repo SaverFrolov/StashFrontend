@@ -111,7 +111,7 @@ export function SettingsScreen() {
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-dialog border border-border bg-surface p-4" aria-label={title}>
+    <section className="rounded-dialog border border-glass-border bg-surface p-4 glass-rim" aria-label={title}>
       <h2 className="mb-3 text-lg font-semibold text-text">{title}</h2>
       {children}
     </section>

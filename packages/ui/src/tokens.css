@@ -1,24 +1,36 @@
-/* Design tokens — single source of truth for colors (see docs/design-tokens.md). */
+/* Design tokens — Liquid Glass edition (see docs/design-tokens.md).
+   Translucent frosted surfaces over an ambient green aurora background.
+   Accent stays green per product decision (2026-11-14). */
 
 :root {
-  --bg: #fafaf9;
-  --surface: #ffffff;
-  --surface-subtle: #f4f4f2;
-  --border: #e4e4e0;
-  --border-strong: #cfcfc9;
-  --text: #1c1c1a;
-  --text-secondary: #5c5c57;
-  --text-tertiary: #6b6b65;
+  --bg: #eaf2ec;
+  --surface: rgb(255 255 255 / 0.55);
+  --surface-subtle: rgb(255 255 255 / 0.32);
+  --border: rgb(16 45 35 / 0.1);
+  --border-strong: rgb(16 45 35 / 0.2);
+  --glass-border: rgb(255 255 255 / 0.65);
+  --text: #12211b;
+  --text-secondary: #46554e;
+  --text-tertiary: #5f6f67;
   --accent: #0e7c66;
   --accent-hover: #0a6552;
-  --accent-subtle: #e6f3ef;
+  --accent-subtle: rgb(14 124 102 / 0.12);
   --success: #1a7f4b;
   --warning: #9a6700;
   --danger: #b42318;
 
-  --radius-control: 6px;
-  --radius-dialog: 10px;
-  --shadow-pop: 0 8px 24px rgb(0 0 0 / 0.12);
+  --glass-blur: 20px;
+  --glass-saturate: 160%;
+
+  --radius-control: 10px;
+  --radius-dialog: 18px;
+  --shadow-pop: 0 8px 32px rgb(10 45 35 / 0.18);
+  --shadow-glow: 0 4px 18px rgb(14 124 102 / 0.4);
+
+  --aurora-image:
+    radial-gradient(50rem 32rem at 8% -8%, rgb(16 185 129 / 0.28), transparent 60%),
+    radial-gradient(46rem 30rem at 92% 6%, rgb(5 150 105 / 0.2), transparent 55%),
+    radial-gradient(42rem 36rem at 45% 112%, rgb(134 239 172 / 0.4), transparent 60%);
 
   --font-sans: "Inter Variable", "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -30,44 +42,58 @@
 }
 
 [data-theme="dark"] {
-  --bg: #151514;
-  --surface: #1c1c1b;
-  --surface-subtle: #242422;
-  --border: #333330;
-  --border-strong: #46463f;
-  --text: #ecece8;
-  --text-secondary: #a8a8a1;
-  --text-tertiary: #8a8a83;
+  --bg: #0a120e;
+  --surface: rgb(22 34 28 / 0.55);
+  --surface-subtle: rgb(30 44 37 / 0.45);
+  --border: rgb(255 255 255 / 0.09);
+  --border-strong: rgb(255 255 255 / 0.16);
+  --glass-border: rgb(255 255 255 / 0.14);
+  --text: #e9f0ea;
+  --text-secondary: #a5b4aa;
+  --text-tertiary: #85938a;
   --accent: #3fb59b;
   --accent-hover: #5cc7af;
-  --accent-subtle: #17302a;
+  --accent-subtle: rgb(63 181 155 / 0.16);
   --success: #4cc38a;
   --warning: #e3b341;
   --danger: #f97066;
 
-  --shadow-pop: 0 8px 24px rgb(0 0 0 / 0.5);
+  --shadow-pop: 0 8px 32px rgb(0 0 0 / 0.55);
+  --shadow-glow: 0 4px 18px rgb(63 181 155 / 0.35);
+
+  --aurora-image:
+    radial-gradient(50rem 32rem at 8% -8%, rgb(63 181 155 / 0.18), transparent 60%),
+    radial-gradient(46rem 30rem at 92% 6%, rgb(16 185 129 / 0.12), transparent 55%),
+    radial-gradient(42rem 36rem at 45% 112%, rgb(6 95 70 / 0.3), transparent 60%);
 
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="system"] {
-    --bg: #151514;
-    --surface: #1c1c1b;
-    --surface-subtle: #242422;
-    --border: #333330;
-    --border-strong: #46463f;
-    --text: #ecece8;
-    --text-secondary: #a8a8a1;
-    --text-tertiary: #8a8a83;
+    --bg: #0a120e;
+    --surface: rgb(22 34 28 / 0.55);
+    --surface-subtle: rgb(30 44 37 / 0.45);
+    --border: rgb(255 255 255 / 0.09);
+    --border-strong: rgb(255 255 255 / 0.16);
+    --glass-border: rgb(255 255 255 / 0.14);
+    --text: #e9f0ea;
+    --text-secondary: #a5b4aa;
+    --text-tertiary: #85938a;
     --accent: #3fb59b;
     --accent-hover: #5cc7af;
-    --accent-subtle: #17302a;
+    --accent-subtle: rgb(63 181 155 / 0.16);
     --success: #4cc38a;
     --warning: #e3b341;
     --danger: #f97066;
 
-    --shadow-pop: 0 8px 24px rgb(0 0 0 / 0.5);
+    --shadow-pop: 0 8px 32px rgb(0 0 0 / 0.55);
+    --shadow-glow: 0 4px 18px rgb(63 181 155 / 0.35);
+
+    --aurora-image:
+      radial-gradient(50rem 32rem at 8% -8%, rgb(63 181 155 / 0.18), transparent 60%),
+      radial-gradient(46rem 30rem at 92% 6%, rgb(16 185 129 / 0.12), transparent 55%),
+      radial-gradient(42rem 36rem at 45% 112%, rgb(6 95 70 / 0.3), transparent 60%);
 
     color-scheme: dark;
   }
@@ -92,7 +118,29 @@
 
 html,
 body {
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
+}
+
+/* Ambient aurora wash behind everything (fixed so panels blur over it). */
+body,
+.bg-bg {
+  background-image: var(--aurora-image);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Liquid glass: every surface panel gets the frosted blur. */
+.bg-surface {
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+/* Specular top edge on raised glass panels. */
+.glass-rim {
+  border-color: var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    var(--shadow-pop);
 }

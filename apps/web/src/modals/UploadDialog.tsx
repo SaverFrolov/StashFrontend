@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { File as FileIcon, Upload, X } from "lucide-react";
 import { Button, Dialog, DialogContent, DialogFooter, Field, Textarea, cn, useToast } from "@inbox/ui";
-import { FILE_ACCEPT_ATTR, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB, isAllowedUploadFile } from "@inbox/api-client";
+import { FILE_ACCEPT_ATTR, isAllowedUploadFile } from "@inbox/api-client";
 import { useApi } from "../state/api";
 import { formatBytes } from "../lib/format";
 
@@ -18,9 +18,6 @@ interface UploadEntry {
 function validate(file: File, t: (k: string, o?: Record<string, unknown>) => string): string | undefined {
   if (!isAllowedUploadFile(file)) {
     return t("modals.uploadInvalidType");
-  }
-  if (file.size > MAX_FILE_SIZE_BYTES) {
-    return t("modals.uploadTooLarge", { size: MAX_FILE_SIZE_MB });
   }
   return undefined;
 }
@@ -136,7 +133,7 @@ export function UploadDialog({
         >
           <Upload size={20} strokeWidth={1.5} className="text-text-tertiary" aria-hidden />
           <span className="text-base text-text">{t("modals.uploadDrop")}</span>
-          <span className="text-xs text-text-tertiary">{t("modals.uploadAllowed", { size: MAX_FILE_SIZE_MB })}</span>
+          <span className="text-xs text-text-tertiary">{t("modals.uploadAllowed")}</span>
           <input
             ref={inputRef}
             type="file"

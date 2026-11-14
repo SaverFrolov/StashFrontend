@@ -20,6 +20,7 @@ export const preset: Partial<Config> = {
         success: "var(--success)",
         warning: "var(--warning)",
         danger: "var(--danger)",
+        "glass-border": "var(--glass-border)",
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
@@ -41,11 +42,12 @@ export const preset: Partial<Config> = {
         semibold: "600",
       },
       borderRadius: {
-        control: "6px",
-        dialog: "10px",
+        control: "10px",
+        dialog: "18px",
       },
       boxShadow: {
         pop: "var(--shadow-pop)",
+        glow: "var(--shadow-glow)",
       },
       spacing: {
         px4: "4px",

@@ -224,7 +224,7 @@ export function Feed({
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", compact ? "w-full" : "w-full")}>
       {/* Segmented filter row */}
-      <div className={cn("border-b border-border bg-surface px-3 py-2", compact ? "" : "mx-auto w-full max-w-feed")}>
+      <div className={cn("border-b border-glass-border bg-surface px-3 py-2", compact ? "" : "mx-auto w-full max-w-feed")}>
         <SegmentedControl
           options={filterOptions(t)}
           value={filter}
@@ -322,7 +322,7 @@ export function Feed({
             {grouped.map((group) => (
               <section key={group.key} aria-label={group.items[0].capturedAt}>
                 <div className="sticky top-0 z-[5] flex justify-center py-2">
-                  <span className="rounded-control border border-border bg-surface px-3 py-1 text-xs font-medium text-text-secondary shadow-pop">
+                  <span className="rounded-control border border-glass-border bg-surface px-3 py-1 text-xs font-medium text-text-secondary glass-rim">
                     {formatDaySeparator(group.items[0].capturedAt, t("common.today"), t("common.yesterday"))}
                   </span>
                 </div>

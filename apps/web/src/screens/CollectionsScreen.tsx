@@ -41,7 +41,7 @@ export function CollectionsScreen() {
         </Button>
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-dialog border border-border bg-surface">
+      <div className="mt-4 overflow-hidden rounded-dialog border border-glass-border bg-surface">
         {isPending && (
           <div aria-hidden>
             {Array.from({ length: 3 }).map((_, i) => (
@@ -193,7 +193,7 @@ export function CollectionDetailScreen() {
         </select>
       </div>
 
-      <div className="mt-3 overflow-hidden rounded-dialog border border-border bg-surface">
+      <div className="mt-3 overflow-hidden rounded-dialog border border-glass-border bg-surface">
         {sorted.length === 0 && (
           <p className="p-8 text-center text-base text-text-secondary">{t("collections.empty")}</p>
         )}
