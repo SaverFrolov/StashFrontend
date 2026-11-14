@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,6 +8,8 @@ import { Button, ItemCardSkeleton, SegmentedControl, cn, useToast } from "@inbox
 import type { Item } from "@inbox/api-client";
 import { FEED_PAGE_SIZE, features } from "@inbox/api-client";
 import { useApi, ITEM_UPDATED_EVENT } from "../state/api";
+import { useCondensedHeader } from "../state/condensed";
+import { useMediaQuery } from "../state/settings";
 import { ItemCard } from "../components/ItemCard";
 import { Composer } from "../components/Composer";
 import { useModals } from "../modals/ModalProvider";
@@ -51,6 +54,20 @@ export function Feed({
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [dragOver, setDragOver] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Condensing filter bar: state lives in the shell context so the header
+  // can reflect data-condensed while the bar stays the same DOM node.
+  const header = useCondensedHeader();
+  const setCondensed = header?.setCondensed;
+  const condensed = compact ? false : header?.condensed ?? false;
+  const condensedRef = useRef(condensed);
+  condensedRef.current = condensed;
+  const isDockable = useMediaQuery("(min-width: 768px)");
+  const barRef = useRef<HTMLDivElement>(null);
+  const fadeRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const firstEvalRef = useRef(true);
+  const [barHeight, setBarHeight] = useState(0);
 
   const feedQuery = useInfiniteQuery({
     queryKey: ["feed", filter],
@@ -115,6 +132,65 @@ export function Feed({
     if (!el) return;
     if (el.scrollTop < 80) loadOlder();
   };
+
+  // Measure the in-flow bar height (the placeholder reserves it when docked)
+  // and track horizontal overflow of the compact bar for the edge fade masks.
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      if (!condensedRef.current) setBarHeight(bar.offsetHeight);
+      const list = bar.querySelector<HTMLElement>('[role="tablist"]');
+      if (list && fadeRef.current) {
+        if (list.scrollWidth > list.clientWidth + 1) fadeRef.current.dataset.overflow = "true";
+        else delete fadeRef.current.dataset.overflow;
+      }
+    });
+    ro.observe(bar);
+    return () => ro.disconnect();
+  }, []);
+
+  // Condense trigger: IntersectionObserver on the live-edge sentinel (no scroll
+  // listeners). Hysteresis via observer re-creation: condense when the sentinel
+  // sinks more than 80px below the viewport, expand when back within 24px.
+  // iOS overscroll keeps the sentinel visible, so it never flips the state.
+  useEffect(() => {
+    if (compact || !setCondensed) return;
+    const root = scrollRef.current;
+    const sentinel = sentinelRef.current;
+    if (!root || !sentinel || typeof IntersectionObserver === "undefined") return;
+    const rootMargin = condensed ? "0px 0px 24px 0px" : "0px 0px 80px 0px";
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        const next = !entry.isIntersecting;
+        if (firstEvalRef.current) {
+          // Loaded already scrolled: apply the state instantly, no animation/flash.
+          firstEvalRef.current = false;
+          if (next !== condensed) setCondensed(next);
+          return;
+        }
+        if (next === condensed) return;
+        // View Transitions morph with instant fallback; compositor-only.
+        const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (typeof doc.startViewTransition === "function" && !reduceMotion) {
+          doc.startViewTransition(() => {
+            flushSync(() => setCondensed(next));
+          });
+        } else {
+          setCondensed(next);
+        }
+      },
+      { root, rootMargin, threshold: 0 },
+    );
+    io.observe(sentinel);
+    return () => io.disconnect();
+  }, [compact, condensed, setCondensed, items.length]);
+
+  // Leaving the feed (e.g. into the detail pane) restores the normal header.
+  useEffect(() => () => setCondensed?.(false), [setCondensed]);
 
   const deleteMutation = useMutation({
     mutationFn: async (ids: string[]) => {
@@ -223,15 +299,36 @@ export function Feed({
 
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", compact ? "w-full" : "w-full")}>
-      {/* Segmented filter row */}
-      <div className={cn("border-b border-glass-border bg-surface px-3 py-2", compact ? "" : "mx-auto w-full max-w-feed")}>
-        <SegmentedControl
-          options={filterOptions(t)}
-          value={filter}
-          onChange={onFilterChange}
-          ariaLabel={t("feed.filterAll")}
-          className="w-full"
-        />
+      {/* Filter bar: the SAME DOM node in both states (no duplication, no
+          reparenting — focus, state and tab order survive the transition).
+          Docking is pure CSS (fixed). The placeholder reserves the in-flow
+          slot so nothing jumps and scrollY never changes because of the
+          switch — no scroll → height → scroll loop. */}
+      <div style={condensed && isDockable ? { height: barHeight || undefined } : undefined}>
+        <div
+          ref={barRef}
+          className={cn(
+            "feed-filter-bar",
+            condensed && isDockable
+              ? "fixed right-4 top-0 z-30 flex h-[var(--header-h)] max-w-[50vw] items-center"
+              : cn(
+                  "border-b border-glass-border bg-surface px-3",
+                  condensed ? "py-1" : "py-2",
+                  !compact && "mx-auto w-full max-w-feed",
+                ),
+          )}
+        >
+          <div ref={fadeRef} className="fade-edges min-w-0 flex-1">
+            <SegmentedControl
+              options={filterOptions(t)}
+              value={filter}
+              onChange={onFilterChange}
+              ariaLabel={t("feed.filterAll")}
+              compact={condensed}
+              className={condensed && isDockable ? "" : "w-full"}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Bulk action bar */}
@@ -356,6 +453,10 @@ export function Feed({
               .map((i) => `${i.title}: ${t(`status.${i.status === "extraction_failed" ? "extractionFailed" : i.status === "ai_failed" ? "aiFailed" : i.status}`)}`)
               .join(", ")}
           </div>
+
+          {/* Live-edge sentinel: the condensing trigger observed via
+              IntersectionObserver (hysteresis 80px in / 24px out) */}
+          <div ref={sentinelRef} aria-hidden className="h-px w-full shrink-0" />
         </div>
       </div>
 

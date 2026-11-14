@@ -252,7 +252,7 @@ export function SearchScreen() {
             <p className="mb-2 text-sm text-text-tertiary tnum" aria-live="polite">
               {t("search.resultsCount", { count: searchQuery.data.length })}
             </p>
-            <div className="overflow-hidden rounded-dialog border border-glass-border bg-surface">
+            <div className="flex flex-col">
               {searchQuery.data.map((r) => (
                 <ItemCard
                   key={r.item.id}

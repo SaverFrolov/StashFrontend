@@ -9,13 +9,23 @@ import { useCommandPalette } from "./CommandPalette";
 import { useModals } from "../modals/ModalProvider";
 import { InstallBanner } from "./InstallBanner";
 import { useAuth } from "../state/auth";
+import { CondensedProvider, useCondensedHeader } from "../state/condensed";
 
 export function AppShell() {
+  return (
+    <CondensedProvider>
+      <AppShellInner />
+    </CondensedProvider>
+  );
+}
+
+function AppShellInner() {
   const { t } = useTranslation();
   const location = useLocation();
   const { openPalette } = useCommandPalette();
   const { openShortcuts } = useModals();
   const { session } = useAuth();
+  const { condensed } = useCondensedHeader() ?? { condensed: false };
 
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -74,7 +84,7 @@ export function AppShell() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Mobile top bar */}
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-glass-border bg-surface px-3 lg:hidden">
+        <header className="sticky top-0 z-30 flex h-[var(--header-h)] items-center gap-2 border-b border-glass-border bg-surface px-3 lg:hidden">
           <IconButton label={t("shell.openMenu")} onClick={() => setDrawerOpen(true)}>
             <MenuIcon size={20} strokeWidth={1.5} aria-hidden />
           </IconButton>
@@ -85,8 +95,11 @@ export function AppShell() {
           </IconButton>
         </header>
 
-        {/* Desktop top bar */}
-        <header className="sticky top-0 z-30 hidden h-14 items-center gap-3 border-b border-glass-border bg-surface px-4 lg:flex">
+        {/* Desktop top bar — data-condensed is set when the feed filter bar docks in */}
+        <header
+          data-condensed={condensed ? "true" : undefined}
+          className="sticky top-0 z-30 hidden h-[var(--header-h)] items-center gap-3 border-b border-glass-border bg-surface px-4 lg:flex"
+        >
           <IconButton
             label={collapsed ? t("shell.expandSidebar") : t("shell.collapseSidebar")}
             onClick={() => setCollapsed((c) => !c)}
@@ -110,7 +123,7 @@ export function AppShell() {
             </kbd>
           </button>
           <div className="flex-1" />
-          {session && (
+          {session && !condensed && (
             <button
               type="button"
               onClick={() => {

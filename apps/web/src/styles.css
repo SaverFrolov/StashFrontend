@@ -69,3 +69,27 @@
     opacity: 1;
   }
 }
+
+/* Condensed filter bar: View Transitions morph (compositor-only, 220ms ease-out). */
+.feed-filter-bar {
+  view-transition-name: stash-filter-bar;
+}
+
+::view-transition-old(stash-filter-bar),
+::view-transition-new(stash-filter-bar) {
+  animation-duration: 220ms;
+  animation-timing-function: ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(stash-filter-bar),
+  ::view-transition-new(stash-filter-bar) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Fade masks at the edges of the compact bar when its content overflows. */
+.fade-edges[data-overflow="true"] [role="tablist"] {
+  mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+}
