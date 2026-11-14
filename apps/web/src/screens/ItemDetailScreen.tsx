@@ -375,7 +375,7 @@ function ItemDetailContent({
                 <MenuItem
                   icon={<Copy size={14} strokeWidth={1.5} aria-hidden />}
                   onSelect={() => {
-                    void navigator.clipboard.writeText(item.source.url!);
+                    void navigator.clipboard?.writeText(item.source.url!);
                     toast.toast({ variant: "success", message: t("common.copied") });
                   }}
                 >
@@ -621,7 +621,7 @@ function ItemDetailContent({
               label={t("item.copyText")}
               size="sm"
               onClick={() => {
-                void navigator.clipboard.writeText(item.extracted.text ?? "");
+                void navigator.clipboard?.writeText(item.extracted.text ?? "");
                 toast.toast({ variant: "success", message: t("common.copied") });
               }}
             >

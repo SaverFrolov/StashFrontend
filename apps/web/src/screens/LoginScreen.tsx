@@ -8,7 +8,7 @@ import { useAuth } from "../state/auth";
 /** Shared centered 400px form layout for S1–S3: plain background, no hero. */
 export function AuthLayout({ title, children, footer }: { title: string; children: React.ReactNode; footer?: React.ReactNode }) {
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-bg p-4">
+    <div className="flex min-h-screen min-h-dvh items-center justify-center bg-bg p-4">
       <div className="w-full max-w-auth-form">
         <h1 className="mb-1 text-center text-xl font-semibold text-text">{APP_NAME}</h1>
         <p className="mb-6 text-center text-base text-text-secondary">{title}</p>

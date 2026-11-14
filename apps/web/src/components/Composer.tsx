@@ -147,8 +147,13 @@ export function Composer() {
     setElapsedMs(accumulatedRef.current + (Date.now() - startedAtRef.current));
   };
 
-  const startLevelMeter = (stream: MediaStream) => {
-    const ctx = new AudioContext();
+  const startLevelMeter = (stream: MediaStream): AudioContext | null => {
+    // Safari < 14.1 only exposes webkitAudioContext
+    const AudioCtor =
+      window.AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtor) return null;
+    const ctx = new AudioCtor();
     const source = ctx.createMediaStreamSource(stream);
     const analyser = ctx.createAnalyser();
     analyser.fftSize = 256;

@@ -19,6 +19,12 @@
   --warning: #9a6700;
   --danger: #b42318;
 
+  /* RGB channels so Tailwind can apply opacity modifiers (/40, /10, ...) */
+  --accent-rgb: 14 124 102;
+  --success-rgb: 26 127 75;
+  --warning-rgb: 154 103 0;
+  --danger-rgb: 180 35 24;
+
   --glass-blur: 20px;
   --glass-saturate: 160%;
 
@@ -59,6 +65,11 @@
   --warning: #e3b341;
   --danger: #f97066;
 
+  --accent-rgb: 63 181 155;
+  --success-rgb: 76 195 138;
+  --warning-rgb: 227 179 65;
+  --danger-rgb: 249 112 102;
+
   --shadow-pop: 0 8px 32px rgb(0 0 0 / 0.55);
   --shadow-glow: 0 4px 18px rgb(63 181 155 / 0.35);
 
@@ -87,6 +98,11 @@
     --success: #4cc38a;
     --warning: #e3b341;
     --danger: #f97066;
+
+    --accent-rgb: 63 181 155;
+    --success-rgb: 76 195 138;
+    --warning-rgb: 227 179 65;
+    --danger-rgb: 249 112 102;
 
     --shadow-pop: 0 8px 32px rgb(0 0 0 / 0.55);
     --shadow-glow: 0 4px 18px rgb(63 181 155 / 0.35);

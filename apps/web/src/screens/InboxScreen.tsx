@@ -376,7 +376,7 @@ export function Feed({
         aria-busy={feedQuery.isPending}
       >
         {dragOver && (
-          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-accent-subtle/80">
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-accent-subtle">
             <p className="rounded-dialog border-2 border-dashed border-accent bg-surface px-6 py-4 text-md font-medium text-accent">
               {t("composer.dropAnywhere")}
             </p>
