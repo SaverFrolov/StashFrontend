@@ -13,7 +13,7 @@ export function MenuContent({ children, className }: { children: ReactNode; clas
         align="end"
         sideOffset={6}
         className={cn(
-          "z-50 min-w-[180px] rounded-dialog border border-glass-border bg-surface p-1 shadow-pop glass-rim",
+          "z-50 min-w-[180px] rounded-dialog border border-accent/40 bg-surface p-1 shadow-pop glass-rim",
           className,
         )}
       >
@@ -84,7 +84,7 @@ export function PopoverContent({
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          "z-50 w-72 rounded-dialog border border-glass-border bg-surface p-3 shadow-pop glass-rim",
+          "z-50 w-72 rounded-dialog border border-accent/40 bg-surface p-3 shadow-pop glass-rim",
           className,
         )}
       >
