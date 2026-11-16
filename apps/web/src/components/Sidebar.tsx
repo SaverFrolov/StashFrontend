@@ -105,9 +105,17 @@ export function Sidebar({
       {/* Wordmark — hidden entirely in the collapsed rail */}
       <div className={cn("flex h-14 items-center border-b border-border px-4", collapsed && "lg:justify-center lg:px-0")}>
         {!collapsed && (
-          <span className="text-md font-semibold tracking-tight text-text" title={APP_NAME}>
+          <button
+            type="button"
+            onClick={() => {
+              navigate("/inbox");
+              onNavigate?.();
+            }}
+            title={APP_NAME}
+            className="rounded-control text-md font-semibold tracking-tight text-text transition-colors duration-150 ease-out hover:text-accent"
+          >
             {APP_NAME}
-          </span>
+          </button>
         )}
         {onToggleCollapse && collapseLabel && (
           <button
