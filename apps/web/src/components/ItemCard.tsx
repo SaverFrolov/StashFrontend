@@ -230,7 +230,7 @@ export const ItemCard = memo(function ItemCard({
       {!selectionMode && (
         <div
           className={cn(
-            "absolute right-3 top-9 items-center gap-0.5 rounded-control border border-glass-border bg-surface p-0.5 glass-rim max-lg:hidden",
+            "absolute right-3 top-9 items-center gap-0.5 rounded-control border border-accent/40 bg-surface p-0.5 glass-rim max-lg:hidden",
             // `hidden` must be dropped entirely while the menu is open:
             // in Tailwind's sheet .hidden outranks a plain .flex, so the
             // strip would stay display:none and unmount the menu trigger

@@ -175,12 +175,12 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/40" />
           <Dialog.Content
-            className="fixed left-1/2 top-[15vh] z-50 w-[calc(100vw-32px)] max-w-[560px] -translate-x-1/2 overflow-hidden rounded-dialog border border-glass-border bg-surface glass-rim"
+            className="fixed left-1/2 top-[15vh] z-50 w-[calc(100vw-32px)] max-w-[560px] -translate-x-1/2 overflow-hidden rounded-dialog border border-accent/40 bg-surface glass-rim"
             onKeyDown={onKeyDown}
             aria-describedby={undefined}
           >
             <Dialog.Title className="sr-only">{t("modals.commandPalettePlaceholder")}</Dialog.Title>
-            <div className="flex items-center gap-2 border-b border-border px-4">
+            <div className="flex items-center gap-2 border-b border-accent/40 px-4">
               <Search size={18} strokeWidth={1.5} className="shrink-0 text-text-tertiary" aria-hidden />
               <input
                 autoFocus
