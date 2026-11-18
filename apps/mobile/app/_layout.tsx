@@ -14,6 +14,7 @@ import { ToastProvider } from "../src/components/Toast";
 import { BottomSheetModalProvider } from "../src/components/Sheet";
 import { AuroraBackground } from "../src/components/AuroraBackground";
 import { OfflineBanner } from "../src/components/OfflineBanner";
+import { SessionExpiredDialog } from "../src/components/SessionExpiredDialog";
 import { ErrorBoundary } from "../src/components/ErrorBoundary";
 import { initI18n } from "../src/i18n";
 
@@ -51,6 +52,7 @@ function ThemedShell() {
           <Stack.Screen name="+not-found" />
         </Stack>
         <OfflineBanner />
+        <SessionExpiredDialog />
       </ToastProvider>
     </>
   );
