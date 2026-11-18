@@ -27,6 +27,7 @@ export default function TabsLayout() {
           borderTopColor: tokens.border,
           borderTopWidth: StyleSheet.hairlineWidth,
           elevation: 0,
+          height: 56,
         },
         tabBarBackground: () => (
           <View style={StyleSheet.absoluteFill}>
