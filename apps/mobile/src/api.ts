@@ -1,5 +1,6 @@
+import * as SecureStore from "expo-secure-store";
 import { MockApi, RestApi, config } from "@inbox/api-client";
-import type { ApiClient } from "@inbox/api-client";
+import type { ApiClient, Session } from "@inbox/api-client";
 import { mmkvStorage } from "./storage";
 
 type ItemUpdatedListener = (id: string) => void;
@@ -32,4 +33,36 @@ export function getApiClient(): ApiClient {
         });
   }
   return client;
+}
+
+const SESSION_STORE_KEY = "auth-session";
+
+/**
+ * Restore the persisted session at startup. MockApi restores itself from its
+ * MMKV storage; RestApi keeps the session in memory only, so mobile persists
+ * it in SecureStore (expo-secure-store) and re-injects it here.
+ */
+export async function initAuth(): Promise<void> {
+  const api = getApiClient();
+  if (api instanceof RestApi && !api.getSession()) {
+    try {
+      const raw = await SecureStore.getItemAsync(SESSION_STORE_KEY);
+      if (raw) api.restoreSession(JSON.parse(raw) as Session);
+    } catch {
+      /* missing or corrupt — stay signed out */
+    }
+  }
+}
+
+/** Persist (or clear) the session token in SecureStore after sign-in/out. */
+export async function persistSession(session: Session | null): Promise<void> {
+  try {
+    if (session) {
+      await SecureStore.setItemAsync(SESSION_STORE_KEY, JSON.stringify(session));
+    } else {
+      await SecureStore.deleteItemAsync(SESSION_STORE_KEY);
+    }
+  } catch {
+    /* non-fatal: mock mode also persists via MMKV */
+  }
 }

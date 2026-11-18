@@ -9,9 +9,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from "@expo-google-fonts/inter";
 import * as SplashScreen from "expo-splash-screen";
 import { ThemeProvider, useTheme } from "../src/theme/ThemeProvider";
+import { AuthProvider } from "../src/state/AuthContext";
 import { ToastProvider } from "../src/components/Toast";
 import { BottomSheetModalProvider } from "../src/components/Sheet";
 import { AuroraBackground } from "../src/components/AuroraBackground";
+import { OfflineBanner } from "../src/components/OfflineBanner";
+import { ErrorBoundary } from "../src/components/ErrorBoundary";
 import { initI18n } from "../src/i18n";
 
 initI18n();
@@ -36,7 +39,18 @@ function ThemedShell() {
             contentStyle: { backgroundColor: "transparent" },
             animation: "fade",
           }}
-        />
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="items/[id]" />
+          <Stack.Screen
+            name="capture"
+            options={{ presentation: "fullScreenModal", animation: "slide_from_bottom" }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <OfflineBanner />
       </ToastProvider>
     </>
   );
@@ -59,13 +73,17 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <KeyboardProvider>
-          <ThemeProvider>
-            <QueryClientProvider client={queryClient}>
-              <BottomSheetModalProvider>
-                <ThemedShell />
-              </BottomSheetModalProvider>
-            </QueryClientProvider>
-          </ThemeProvider>
+          <ErrorBoundary>
+            <ThemeProvider>
+              <AuthProvider>
+                <QueryClientProvider client={queryClient}>
+                  <BottomSheetModalProvider>
+                    <ThemedShell />
+                  </BottomSheetModalProvider>
+                </QueryClientProvider>
+              </AuthProvider>
+            </ThemeProvider>
+          </ErrorBoundary>
         </KeyboardProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
