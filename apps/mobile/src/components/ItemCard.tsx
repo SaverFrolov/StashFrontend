@@ -21,7 +21,7 @@ import { ActionMenu } from "./ActionMenu";
 import type { ActionMenuItem } from "./ActionMenu";
 import { domainOf, formatRelative } from "../lib/format";
 
-const typeIcons: Record<ItemType, LucideIcon> = {
+export const typeIcons: Record<ItemType, LucideIcon> = {
   link: Link2,
   text: FileText,
   pdf: FileIcon,
