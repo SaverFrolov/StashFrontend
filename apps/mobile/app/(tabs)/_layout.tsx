@@ -16,35 +16,36 @@ export default function TabsLayout() {
   if (!session) return <Redirect href="/(auth)/login" />;
 
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          // Normal flow (not absolute): screens and the docked composer must
-          // sit above the bar without manual height math. Glass look comes
-          // from tabBarBackground below.
-          backgroundColor: "transparent",
-          borderTopColor: tokens.border,
-          borderTopWidth: StyleSheet.hairlineWidth,
-          elevation: 0,
-          height: 56,
-        },
-        tabBarBackground: () => (
-          <View style={StyleSheet.absoluteFill}>
-            <BlurView
-              tint={theme === "dark" ? "dark" : "light"}
-              intensity={80}
-              experimentalBlurMethod={Platform.OS === "android" ? "none" : undefined}
-              style={StyleSheet.absoluteFill}
-            />
-            <View style={[StyleSheet.absoluteFill, { backgroundColor: tokens.surface }]} />
-          </View>
-        ),
-        tabBarActiveTintColor: tokens.accent,
-        tabBarInactiveTintColor: tokens.textTertiary,
-        tabBarLabelStyle: { fontFamily: fonts.medium, fontSize: 11, lineHeight: 14 },
-      }}
-    >
+    <View style={{ flex: 1, backgroundColor: tokens.bg }}>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            // Normal flow (not absolute): screens and the docked composer must
+            // sit above the bar without manual height math. Glass look comes
+            // from tabBarBackground below.
+            backgroundColor: "transparent",
+            borderTopColor: tokens.border,
+            borderTopWidth: StyleSheet.hairlineWidth,
+            elevation: 0,
+            height: 56,
+          },
+          tabBarBackground: () => (
+            <View style={StyleSheet.absoluteFill}>
+              <BlurView
+                tint={theme === "dark" ? "dark" : "light"}
+                intensity={80}
+                experimentalBlurMethod={Platform.OS === "android" ? "none" : undefined}
+                style={StyleSheet.absoluteFill}
+              />
+              <View style={[StyleSheet.absoluteFill, { backgroundColor: tokens.surface }]} />
+            </View>
+          ),
+          tabBarActiveTintColor: tokens.accent,
+          tabBarInactiveTintColor: tokens.textTertiary,
+          tabBarLabelStyle: { fontFamily: fonts.medium, fontSize: 11, lineHeight: 14 },
+        }}
+      >
       <Tabs.Screen
         name="index"
         options={{
@@ -81,6 +82,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => <Settings color={color} size={size} strokeWidth={1.5} />,
         }}
       />
-    </Tabs>
+      </Tabs>
+    </View>
   );
 }
