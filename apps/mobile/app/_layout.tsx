@@ -28,16 +28,16 @@ const queryClient = new QueryClient({
 });
 
 function ThemedShell() {
-  const { theme } = useTheme();
+  const { theme, tokens } = useTheme();
   return (
     <>
-      <AuroraBackground />
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
+      <AuroraBackground />
       <ToastProvider>
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: "transparent" },
+            contentStyle: { backgroundColor: tokens.bg },
             animation: "fade",
           }}
         >
