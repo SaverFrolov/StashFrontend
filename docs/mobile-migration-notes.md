@@ -22,6 +22,16 @@
 - **S12**: `+not-found` (404), глобальный `OfflineBanner` (NetInfo) в корне вместо отдельного offline-экрана, RN ErrorBoundary с теми же строками, что на вебе (хардкод English — как на вебе: i18n-стек сам может быть источником падения).
 - **Клавиатура**: `KeyboardProvider` (react-native-keyboard-controller) в корне; auth-экраны в `KeyboardAvoidingView` (iOS padding).
 
+## Фаза 4 (лента S4 + композер)
+
+- **Инвертированная лента**: `Animated.FlatList inverted` (не FlashList — стабильнее для inverted): новые снизу (живой край = offset 0), `data[0]` рендерится внизу; строки собираются как на вебе (ascending + разделители дат впереди дня) и разворачиваются. `onEndReached` = скролл вверх по истории = подгрузка более старых (тот же курсор `capturedAt`, что на вебе). В инвертированном списке `contentOffset.y` — это расстояние от живого края, поэтому гистерезис компактного бара ложится напрямую: вход 80 / выход 24 (`condenseThresholds` из ui-core).
+- **Компактный фильтр-бар**: веб-правило «один DOM-узел» в RN реализовано как кроссфейд двух экземпляров `SegmentedFilter` (full/compact) внутри полосы ПОСТОЯННОЙ высоты 52dp — layout shift невозможен конструктивно, состояние `filter` живёт в экране (ничего не теряется), анимация только opacity+scale, 220мс ease-out (`motion.morphMs`), `useReducedMotion` → duration 0. Триггер — `useAnimatedScrollHandler` (UI-поток), `runOnJS(setCondensed)` только в момент перехода порога.
+- **expo-audio**: `isMeteringEnabled` — поле верхнего уровня `RecordingOptions` (не в android/ios-подопциях). **Отклонение от веба**: у `AudioRecorder` есть `pause()`, но нет `resume()` — из паузы доступны Stop (завершить) и Discard; запись не теряется. Level bar: `useAudioRecorderState(recorder, 100)`, metering в dB нормализуется `(dB+50)/50`.
+- **Загрузка файлов (M1)**: `expo-document-picker` → `api.saveFile({ file: { uri, name, mimeType, size } })` — мобильный путь НЕ конвертирует файлы в base64/dataURL (в отличие от веба), MockApi хранит uri как есть. Без ограничения размера (решение от 14.11.2026).
+- **Bulk-панель**: мультивыбор long-press; «В коллекцию» (M2-sheet), «Удалить» (1 → сразу + Undo-тост 8с с восстановлением через saveText как на вебе; >1 → M6-диалог). Кнопка bulk-экспорта появится в Фазе 6 вместе с M7 (expo-file-system + expo-sharing).
+- **Таб-бар в нормальном потоке** (не absolute): композер гарантированно выше таб-бара без ручного расчёта высот; цена — лента не скроллится «под стеклом» таб-бара (осознанное упрощение).
+- **Черновики**: `mmkv` (COMPOSER_DRAFT_KEY), переживают перезапуск; после M13 (Фаза 6) повторный вход их не теряет.
+
 ## Открытые вопросы / на проверку в следующих фазах
 
 - Hermes `Intl.PluralRules`/`RelativeTimeFormat`: проверить на первом прогоне в эмуляторе; при отсутствии — `@formatjs` polyfill до `initI18n()` (Фаза 4).

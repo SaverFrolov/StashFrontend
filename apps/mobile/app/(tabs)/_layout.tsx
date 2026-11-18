@@ -20,7 +20,9 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          position: "absolute",
+          // Normal flow (not absolute): screens and the docked composer must
+          // sit above the bar without manual height math. Glass look comes
+          // from tabBarBackground below.
           backgroundColor: "transparent",
           borderTopColor: tokens.border,
           borderTopWidth: StyleSheet.hairlineWidth,
