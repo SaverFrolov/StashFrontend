@@ -21,6 +21,20 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem(THEME_KEY);
     return stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
   });
+  // Language lives in state, synced via the languageChanged event: the i18n
+  // instance reference is stable, so reading resolvedLanguage inside useMemo
+  // would never refresh and consumers (e.g. the RU/EN selector highlight)
+  // would keep the previous language.
+  const [language, setLanguageState] = useState<string>(() => i18n.resolvedLanguage ?? "ru");
+
+  useEffect(() => {
+    const handler = (lng: string) => setLanguageState(lng);
+    i18n.on("languageChanged", handler);
+    setLanguageState(i18n.resolvedLanguage ?? "ru");
+    return () => {
+      i18n.off("languageChanged", handler);
+    };
+  }, [i18n]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -37,8 +51,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ theme, setTheme, language: i18n.resolvedLanguage ?? "ru", setLanguage }),
-    [theme, setTheme, i18n, setLanguage],
+    () => ({ theme, setTheme, language, setLanguage }),
+    [theme, setTheme, language, setLanguage],
   );
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
