@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatPlural, pluralCategory } from "../src/lib/plural";
+import { formatPlural, pluralCategory } from "../src/plural";
 
 describe("pluralCategory", () => {
   it("handles Russian one/few/many forms", () => {

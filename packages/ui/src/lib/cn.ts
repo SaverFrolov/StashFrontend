@@ -1,5 +1,2 @@
-export type ClassValue = string | number | false | null | undefined;
-
-export function cn(...values: ClassValue[]): string {
-  return values.filter(Boolean).join(" ");
-}
+export { cn } from "@inbox/ui-core";
+export type { ClassValue } from "@inbox/ui-core";
