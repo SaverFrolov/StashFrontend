@@ -146,6 +146,11 @@ export class RestApi implements ApiClient {
     return this.session;
   }
 
+  /** Restore a persisted session (used by the mobile SecureStore bootstrap). */
+  restoreSession(session: Session): void {
+    this.session = session;
+  }
+
   listItems(opts: { cursor?: string; limit?: number; filter?: "all" | "attention" | ItemType }): Promise<Page<Item>> {
     return this.req<Page<Item>>(`/items${qs({ cursor: opts.cursor, limit: opts.limit, filter: opts.filter })}`);
   }
