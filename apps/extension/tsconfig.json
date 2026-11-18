@@ -1,1 +1,1 @@
-{"extends": "../../tsconfig.base.json", "compilerOptions": {"types": ["chrome", "vite/client"]}, "include": ["src", "vite.config.ts"]}
+{"extends": "../../tsconfig.base.json", "compilerOptions": {"types": ["chrome", "vite/client"], "baseUrl": ".", "paths": {"react": ["./node_modules/@types/react"], "react-dom": ["./node_modules/@types/react-dom"], "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime"]}}, "include": ["src", "vite.config.ts"]}

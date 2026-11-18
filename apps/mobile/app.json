@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Stash",
+    "slug": "stash",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "stash",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "android": {
+      "package": "com.saverfrolov.stash",
+      "adaptiveIcon": {
+        "backgroundColor": "#0E7C66",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "softwareKeyboardLayoutMode": "resize",
+      "predictiveBackGestureEnabled": false
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow Stash to access the microphone to record voice notes."
+        }
+      ],
+      "expo-secure-store",
+      "expo-localization",
+      "expo-sharing",
+      "expo-video"
+    ]
+  }
+}
