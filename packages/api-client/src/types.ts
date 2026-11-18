@@ -143,14 +143,25 @@ export interface SaveLinkInput {
   collectionIds?: string[];
 }
 
+/**
+ * Platform-neutral file payload.
+ * Web passes a data URL as `uri`; mobile passes content:// or file:// URIs.
+ */
+export interface FilePayload {
+  uri: string;
+  name: string;
+  mimeType: string;
+  size?: number;
+}
+
 export interface SaveFileInput {
-  file: { name: string; size: number; mime: string; dataUrl: string };
+  file: FilePayload;
   comment?: string;
   collectionIds?: string[];
 }
 
 export interface SaveAudioInput {
-  blob: { name: string; size: number; mime: string; dataUrl: string };
+  blob: FilePayload;
   durationMs: number;
   comment?: string;
 }
@@ -196,4 +207,18 @@ export interface AttentionCount {
 
 export interface UsageInfo {
   bytesUsed: number;
+}
+
+/** Key-value storage injected into MockApi: localStorage on web, MMKV/AsyncStorage on mobile. */
+export interface StorageAdapter {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
+/** Neutral export payload: platforms wrap it themselves (Blob on web, file on mobile). */
+export interface ExportResult {
+  data: string;
+  mime: string;
+  filename: string;
 }

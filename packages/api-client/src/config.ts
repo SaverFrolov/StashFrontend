@@ -68,6 +68,8 @@ export interface AppConfig {
 }
 
 const env = typeof import.meta !== "undefined" ? (import.meta as unknown as { env?: Record<string, string | undefined> }).env : undefined;
+// Expo/Metro exposes EXPO_PUBLIC_* via process.env; browsers don't define process.
+const expoEnv = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env;
 
 export const features: FeatureFlags = {
   audio: true,
@@ -77,7 +79,7 @@ export const features: FeatureFlags = {
 
 export const config: AppConfig = {
   appName: APP_NAME,
-  apiBaseUrl: env?.VITE_API_BASE_URL || undefined,
+  apiBaseUrl: env?.VITE_API_BASE_URL || expoEnv?.EXPO_PUBLIC_API_BASE_URL || undefined,
   feedPageSize: FEED_PAGE_SIZE,
   features,
 };

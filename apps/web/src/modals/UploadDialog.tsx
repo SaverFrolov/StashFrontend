@@ -87,7 +87,7 @@ export function UploadDialog({
         setEntries((prev) => prev.map((e) => (e.id === entry.id ? { ...e, progress: 40 } : e)));
         const dataUrl = await toDataUrl(entry.file);
         await api.saveFile({
-          file: { name: entry.file.name, size: entry.file.size, mime: entry.file.type || "application/pdf", dataUrl },
+          file: { uri: dataUrl, name: entry.file.name, mimeType: entry.file.type || "application/pdf", size: entry.file.size },
           comment: comment || undefined,
         });
         okCount += 1;
