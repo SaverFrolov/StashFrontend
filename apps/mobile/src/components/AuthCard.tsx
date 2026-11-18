@@ -36,7 +36,10 @@ export function AuthCard({ title, children, footer }: { title: string; children:
           >
             {title}
           </Text>
-          <GlassSurface style={{ borderRadius: radii.dialog, padding: 24, gap: 16 }}>{children}</GlassSurface>
+          {/* Fallback=true removes Android's expensive blur, keeping simple glass surface like web */}
+          <GlassSurface fallback style={{ borderRadius: radii.dialog, padding: 24, gap: 16 }}>
+            {children}
+          </GlassSurface>
           {footer ? <View style={{ marginTop: 16 }}>{footer}</View> : null}
         </View>
       </ScrollView>
