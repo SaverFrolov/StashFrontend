@@ -1,0 +1,1 @@
+{"name": "@inbox/locales", "version": "0.1.0", "private": true, "type": "module", "description": "Shared i18n resources for web and mobile (single source, no copies)", "exports": {"./ru": "./ru.json", "./en": "./en.json"}}

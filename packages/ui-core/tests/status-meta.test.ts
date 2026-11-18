@@ -6,7 +6,7 @@ import {
   needsAttention,
   statusLabelKey,
   statusMeta,
-} from "../src/lib/status-meta";
+} from "../src/status-meta";
 
 const ALL_STATUSES: ItemStatus[] = [
   "saved",
