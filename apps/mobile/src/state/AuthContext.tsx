@@ -10,6 +10,10 @@ interface AuthContextValue {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  /** M13: set when the API reports an expired/invalid session */
+  sessionExpired: boolean;
+  markSessionExpired: () => void;
+  clearSessionExpired: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -18,6 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const api = getApiClient();
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -38,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const s = await api.signIn(email, password);
       await persistSession(s);
       setSession(s);
+      setSessionExpired(false);
     },
     [api],
   );
@@ -47,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const s = await api.signUp(name, email, password);
       await persistSession(s);
       setSession(s);
+      setSessionExpired(false);
     },
     [api],
   );
@@ -58,8 +65,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [api]);
 
   const value = useMemo(
-    () => ({ session, ready, signIn, signUp, signOut }),
-    [session, ready, signIn, signUp, signOut],
+    () => ({
+      session,
+      ready,
+      signIn,
+      signUp,
+      signOut,
+      sessionExpired,
+      markSessionExpired: () => setSessionExpired(true),
+      clearSessionExpired: () => setSessionExpired(false),
+    }),
+    [session, ready, signIn, signUp, signOut, sessionExpired],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

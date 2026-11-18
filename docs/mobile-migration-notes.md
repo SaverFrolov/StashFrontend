@@ -32,6 +32,16 @@
 - **Таб-бар в нормальном потоке** (не absolute): композер гарантированно выше таб-бара без ручного расчёта высот; цена — лента не скроллится «под стеклом» таб-бара (осознанное упрощение).
 - **Черновики**: `mmkv` (COMPOSER_DRAFT_KEY), переживают перезапуск; после M13 (Фаза 6) повторный вход их не теряет.
 
+## Фаза 6 (настройки S10, захват S11, M7/M10/M12/M13)
+
+- **Приём «Поделиться» — нативно через expo-sharing v58** (без社区 пакетов и самописных config plugins): `Sharing.getSharedPayloads()` / `clearSharedPayloads()` (experimental, Android+iOS); config-плагин expo-sharing зарегистрирован автоматически при `expo install` — он добавляет intent-фильтры ACTION_SEND/SEND_MULTIPLE. Чистая функция `parseSharePayloads()` (src/lib/share.ts) разбирает payload'ы на текст и файлы и покрыта юнит-тестами. Файлы копируются из кэша шаринга (`expo-file-system/legacy` copyAsync) ДО `clearSharedPayloads()` (иначе кэш очищается). Deep-link `stash://capture?text=&url=` работает параллельно через expo-router params.
+- **Экспорт (M7)**: `exportData()` возвращает нейтральный `{data, mime, filename}`; запись через legacy `writeAsStringAsync` в cacheDirectory, выдача — `Sharing.shareAsync`. Бинарный ZIP с оригиналами не переносится (текстовый JSON/Markdown — как в MockApi; ограничение задокументировано в RestApi).
+- **API-токены (M12)**: bottom sheet со списком, созданием (имя + срок в днях) и reveal-once диалогом секрета (копирование через expo-clipboard).
+- **M13**: `sessionExpired` во AuthContext + глобальный SessionExpiredDialog (черновики в MMKV не теряются). Авто-триггер по 401 появится с реальным бэкендом (в MockApi сессия не истекает) — как и на вебе.
+- **Настройки S10**: 6 разделов как на вебе; «Захват» вместо инструкции про расширение/PWA показывает подсказку про «Поделиться» (новый ключ локалей `settings.captureShareHint`, добавлен в общие packages/locales) + кнопку быстрого захвата + API-токены. Удаление аккаунта — M6 с вводом email. AI-ключ write-only, тест подключения, автообработка свитчем.
+- **Запись аудио**: общая логика вынесена в `useRecorderFlow` + UI в `RecorderBar` (переиспользуются композером S4 и захватом S11 — без дублирования).
+- **Тесты мобильного workspace** (vitest, node-окружение, алиасы на workspace-пакеты): парсинг share-payload'ов; MockApi с инжектируемым StorageAdapter (персистентность сессии и элементов, RN-файлы как uri без base64); typeFromMime на RN-кейсах (content://, file://, пустой mime).
+
 ## Открытые вопросы / на проверку в следующих фазах
 
 - Hermes `Intl.PluralRules`/`RelativeTimeFormat`: проверить на первом прогоне в эмуляторе; при отсутствии — `@formatjs` polyfill до `initI18n()` (Фаза 4).
