@@ -1,6 +1,1 @@
-{
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true
-  }
-}
+{"extends": "expo/tsconfig.base", "compilerOptions": {"strict": true, "resolveJsonModule": true, "paths": {"@inbox/api-client": ["../../packages/api-client/src/index.ts"], "@inbox/api-client/*": ["../../packages/api-client/src/*"], "@inbox/ui-core": ["../../packages/ui-core/src/index.ts"], "@inbox/ui-core/*": ["../../packages/ui-core/src/*"], "@inbox/locales/ru": ["../../packages/locales/ru.json"], "@inbox/locales/en": ["../../packages/locales/en.json"]}}, "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts"], "exclude": ["node_modules", "dist", ".expo"]}

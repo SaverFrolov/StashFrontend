@@ -35,7 +35,9 @@
       "expo-secure-store",
       "expo-localization",
       "expo-sharing",
-      "expo-video"
+      "expo-video",
+      "expo-font",
+      "expo-splash-screen"
     ]
   }
 }
