@@ -100,10 +100,10 @@ export function Composer() {
       });
       return api.saveAudio({
         blob: {
+          uri: dataUrl,
           name: `voice-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.webm`,
+          mimeType: blob.type || "audio/webm",
           size: blob.size,
-          mime: blob.type || "audio/webm",
-          dataUrl,
         },
         durationMs: elapsedMs,
       });

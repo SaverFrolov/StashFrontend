@@ -5,6 +5,7 @@ export type { AppConfig } from "./config";
 export { RestApi, ATTENTION_STATUSES } from "./client";
 export type { ApiClient } from "./client";
 export { MockApi, isUrl, splitUrlAndComment } from "./mock";
+export type { MockApiOptions } from "./mock";
 export { seedItems, seedCollections, seedTags } from "./seed";
 
 import { config } from "./config";

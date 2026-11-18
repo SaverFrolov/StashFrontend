@@ -6,6 +6,7 @@ import type {
   Collection,
   CollectionPatch,
   ExportOptions,
+  ExportResult,
   Item,
   ItemPatch,
   ItemType,
@@ -17,6 +18,7 @@ import type {
   SearchFilters,
   SearchResult,
   Session,
+  StorageAdapter,
   Tag,
   UsageInfo,
 } from "./types";
@@ -124,30 +126,72 @@ const ANNOTATIONS: Record<string, string> = {
 
 const SUGGESTED_TAGS = ["interesting", "later", "reference"];
 
+/** Default storage: localStorage where available (web), no-op elsewhere. */
+const localStorageAdapter: StorageAdapter = {
+  getItem: (key) => (typeof localStorage !== "undefined" ? localStorage.getItem(key) : null),
+  setItem: (key, value) => {
+    if (typeof localStorage !== "undefined") localStorage.setItem(key, value);
+  },
+  removeItem: (key) => {
+    if (typeof localStorage !== "undefined") localStorage.removeItem(key);
+  },
+};
+
+export interface MockApiOptions {
+  /** Storage backend; defaults to a localStorage adapter (web behaviour). */
+  storage?: StorageAdapter;
+  /** Item-update notification; defaults to the `inbox:mock-item-updated` window CustomEvent. */
+  onItemUpdated?: (id: string) => void;
+  /** Timer used by the simulated pipeline; defaults to globalThis.setTimeout. */
+  schedule?: (fn: () => void, ms: number) => void;
+}
+
 export class MockApi implements ApiClient {
   private db: Db;
   private session: Session | null = null;
+  private storage: StorageAdapter;
+  private options: MockApiOptions;
 
-  constructor() {
+  constructor(options: MockApiOptions = {}) {
+    this.options = options;
+    this.storage = options.storage ?? localStorageAdapter;
     this.db = this.load();
     try {
-      const raw = localStorage.getItem(SESSION_KEY);
+      const raw = this.storage.getItem(SESSION_KEY);
       if (raw) this.session = JSON.parse(raw) as Session;
     } catch {
       this.session = null;
     }
   }
 
+  private schedule(fn: () => void, ms: number): void {
+    if (this.options.schedule) {
+      this.options.schedule(fn, ms);
+      return;
+    }
+    globalThis.setTimeout(fn, ms);
+  }
+
+  private emitUpdated(id: string): void {
+    if (this.options.onItemUpdated) {
+      this.options.onItemUpdated(id);
+      return;
+    }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("inbox:mock-item-updated", { detail: { id } }));
+    }
+  }
+
   private load(): Db {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = this.storage.getItem(STORAGE_KEY);
       if (raw) return JSON.parse(raw) as Db;
     } catch {
       /* fall through to seed */
     }
     const db = freshDb();
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      this.storage.setItem(STORAGE_KEY, JSON.stringify(db));
     } catch {
       /* storage may be unavailable (private mode) */
     }
@@ -156,7 +200,7 @@ export class MockApi implements ApiClient {
 
   private persist(): void {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.db));
+      this.storage.setItem(STORAGE_KEY, JSON.stringify(this.db));
     } catch {
       /* ignore quota errors */
     }
@@ -164,8 +208,8 @@ export class MockApi implements ApiClient {
 
   private saveSession(): void {
     try {
-      if (this.session) localStorage.setItem(SESSION_KEY, JSON.stringify(this.session));
-      else localStorage.removeItem(SESSION_KEY);
+      if (this.session) this.storage.setItem(SESSION_KEY, JSON.stringify(this.session));
+      else this.storage.removeItem(SESSION_KEY);
     } catch {
       /* ignore */
     }
@@ -291,7 +335,7 @@ export class MockApi implements ApiClient {
     const failExtraction = item.type === "link" && Math.random() < 0.12;
     const failAi = Math.random() < 0.08;
 
-    window.setTimeout(() => {
+    this.schedule(() => {
       extractionStep.finishedAt = new Date().toISOString();
       if (failExtraction) {
         extractionStep.status = "failed";
@@ -310,7 +354,7 @@ export class MockApi implements ApiClient {
         annotateStep.status = "running";
         annotateStep.startedAt = new Date().toISOString();
         this.persist();
-        window.setTimeout(() => {
+        this.schedule(() => {
           annotateStep.finishedAt = new Date().toISOString();
           if (failAi) {
             annotateStep.status = "failed";
@@ -327,11 +371,11 @@ export class MockApi implements ApiClient {
           }
           this.persist();
           this.touchItem(item.id);
-          window.dispatchEvent(new CustomEvent("inbox:mock-item-updated", { detail: { id: item.id } }));
+          this.emitUpdated(item.id);
         }, annotateMs);
       }
       this.persist();
-      window.dispatchEvent(new CustomEvent("inbox:mock-item-updated", { detail: { id: item.id } }));
+      this.emitUpdated(item.id);
     }, extractMs);
   }
 
@@ -374,7 +418,7 @@ export class MockApi implements ApiClient {
 
   async saveFile(input: SaveFileInput): Promise<Item> {
     await delay();
-    const mime = input.file.mime;
+    const mime = input.file.mimeType;
     const type: ItemType = typeFromMime(mime, input.file.name);
     const item = this.newItem({
       type,
@@ -382,7 +426,7 @@ export class MockApi implements ApiClient {
       title: input.file.name,
       lang: guessLang(input.file.name),
       source: { name: input.file.name },
-      original: { file: { name: input.file.name, size: input.file.size, mime, url: input.file.dataUrl } },
+      original: { file: { name: input.file.name, size: input.file.size ?? 0, mime, url: input.file.uri } },
       userComment: input.comment,
       collectionIds: input.collectionIds ?? [],
     });
@@ -399,7 +443,7 @@ export class MockApi implements ApiClient {
 
   /** Transcription is unavailable in the mock: audio always ends as partial. */
   private scheduleAudioPartial(item: Item): void {
-    window.setTimeout(() => {
+    this.schedule(() => {
       item.status = "partial";
       item.extracted = { error: "Audio saved; transcription not available" };
       item.processing = [
@@ -407,7 +451,7 @@ export class MockApi implements ApiClient {
         { name: "annotate", status: "skipped" },
       ];
       this.persist();
-      window.dispatchEvent(new CustomEvent("inbox:mock-item-updated", { detail: { id: item.id } }));
+      this.emitUpdated(item.id);
     }, 1500);
   }
 
@@ -417,7 +461,7 @@ export class MockApi implements ApiClient {
       type: "audio",
       status: "saved",
       title: input.blob.name,
-      original: { file: { name: input.blob.name, size: input.blob.size, mime: input.blob.mime, url: input.blob.dataUrl } },
+      original: { file: { name: input.blob.name, size: input.blob.size ?? 0, mime: input.blob.mimeType, url: input.blob.uri } },
       userComment: input.comment,
     });
     this.db.items.push(item);
@@ -778,7 +822,7 @@ export class MockApi implements ApiClient {
 
   // ---- export / usage ----
 
-  async exportData(options: ExportOptions): Promise<{ blob: Blob; filename: string }> {
+  async exportData(options: ExportOptions): Promise<ExportResult> {
     await delay();
     let items = [...this.db.items];
     if (options.scope === "collection" && options.collectionId) {
@@ -806,15 +850,17 @@ export class MockApi implements ApiClient {
           return lines.join("\n");
         })
         .join("\n\n---\n\n");
-      return { blob: new Blob([md], { type: "text/markdown" }), filename: "stash-export.md" };
+      return { data: md, mime: "text/markdown", filename: "stash-export.md" };
     }
     const json = JSON.stringify({ exportedAt: new Date().toISOString(), items: stripped }, null, 2);
-    return { blob: new Blob([json], { type: "application/json" }), filename: "stash-export.json" };
+    return { data: json, mime: "application/json", filename: "stash-export.json" };
   }
 
   async usage(): Promise<UsageInfo> {
     await delay();
-    const bytes = new Blob([JSON.stringify(this.db)]).size;
+    const json = JSON.stringify(this.db);
+    const bytes =
+      typeof TextEncoder === "function" ? new TextEncoder().encode(json).length : json.length * 2;
     const filesBytes = this.db.items.reduce((acc, i) => acc + (i.original.file?.size ?? 0), 0);
     return { bytesUsed: bytes + filesBytes };
   }

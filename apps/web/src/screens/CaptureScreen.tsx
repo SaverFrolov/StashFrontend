@@ -104,10 +104,10 @@ export function CaptureScreen() {
         });
         return api.saveAudio({
           blob: {
+            uri: dataUrl,
             name: `voice-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.webm`,
+            mimeType: audioBlob.type || "audio/webm",
             size: audioBlob.size,
-            mime: audioBlob.type || "audio/webm",
-            dataUrl,
           },
           durationMs: recordMs,
           comment: comment.trim() || undefined,
@@ -122,7 +122,7 @@ export function CaptureScreen() {
         });
         const mime = file.type || "application/pdf";
         return api.saveFile({
-          file: { name: file.name, size: file.size, mime, dataUrl },
+          file: { uri: dataUrl, name: file.name, mimeType: mime, size: file.size },
           comment: comment.trim() || undefined,
         });
       }

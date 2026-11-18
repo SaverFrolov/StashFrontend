@@ -68,7 +68,8 @@ export function ExportDialog({
       });
       window.clearInterval(timer);
       setProgress(100);
-      const url = URL.createObjectURL(result.blob);
+      const blob = new Blob([result.data], { type: result.mime });
+      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = result.filename;

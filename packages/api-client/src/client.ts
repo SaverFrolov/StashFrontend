@@ -5,6 +5,7 @@ import type {
   Collection,
   CollectionPatch,
   ExportOptions,
+  ExportResult,
   Item,
   ItemPatch,
   ItemStatus,
@@ -79,7 +80,7 @@ export interface ApiClient {
   revokeApiToken(id: string): Promise<void>;
 
   // export / usage
-  exportData(options: ExportOptions): Promise<{ blob: Blob; filename: string }>;
+  exportData(options: ExportOptions): Promise<ExportResult>;
   usage(): Promise<UsageInfo>;
 }
 
@@ -283,7 +284,7 @@ export class RestApi implements ApiClient {
     return this.req<void>(`/api-tokens/${id}`, { method: "DELETE" });
   }
 
-  async exportData(options: ExportOptions): Promise<{ blob: Blob; filename: string }> {
+  async exportData(options: ExportOptions): Promise<ExportResult> {
     const headers: Record<string, string> = {};
     if (this.session) headers.Authorization = `Bearer ${this.session.token}`;
     const res = await fetch(`${this.baseUrl}/export`, {
@@ -292,9 +293,14 @@ export class RestApi implements ApiClient {
       body: JSON.stringify(options),
     });
     if (!res.ok) throw new Error(`API error ${res.status}`);
-    const blob = await res.blob();
-    const ext = options.format === "markdown" ? "md" : "zip";
-    return { blob, filename: `stash-export.${ext}` };
+    // Text-based transport (mock-compatible). A real binary ZIP export would
+    // need an ArrayBuffer channel — out of scope until a real backend exists.
+    const data = await res.text();
+    const mime =
+      res.headers.get("content-type")?.split(";")[0] ??
+      (options.format === "markdown" ? "text/markdown" : "application/json");
+    const ext = options.format === "markdown" ? "md" : "json";
+    return { data, mime, filename: `stash-export.${ext}` };
   }
 
   usage(): Promise<UsageInfo> {
