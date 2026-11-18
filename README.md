@@ -8,11 +8,17 @@
 
 ```
 apps/web            — веб-приложение / PWA на React 18 + Vite (экраны S1–S12)
+apps/mobile         — Android-приложение на Expo / React Native (те же экраны, нативный UX)
 apps/extension      — Chromium MV3 расширение (popup E1, options E2, контекстные меню)
-packages/ui         — дизайн-токены (CSS-переменные), Tailwind-пресет, компоненты на Radix
+packages/ui         — дизайн-токены (CSS), Tailwind-пресет, компоненты на Radix (веб)
+packages/ui-core    — платформо-нейтральные токены (TS), plural-форматтер, маппинг статусов
 packages/api-client — типы, Zod-схемы, интерфейс ApiClient, MockApi, RestApi, демо-данные
+packages/locales    — общие словари ru/en для веба и мобильного приложения
 scripts/gen-icons.mjs — генератор PNG-иконок без зависимостей
 docs/design-tokens.md — справочник токенов
+docs/mobile-migration-plan.md — план переноса на Android
+docs/mobile-migration-notes.md — решения и отклонения мобильной версии
+docs/mobile-parity/ — чек-лист визуальной сверки веб ↔ Android
 ```
 
 ## Требования
@@ -35,7 +41,29 @@ pnpm typecheck    # tsc --noEmit везде
 pnpm test         # Vitest (форматтер множественного числа + маппинг статусов)
 ```
 
-Демо-вход: любая почта + любой пароль (MockApi принимает всё). В хранилище заранее загружены 16 разноплановых элементов, 3 коллекции и ~12 тегов. Данные сохраняются в `localStorage` (`inbox-mock-db-v1`).
+Демо-вход: любая почта + любой пароль (MockApi принимает всё). В хранилище заранее загружены 19 разноплановых демо-элементов, 3 коллекции и ~12 тегов. Веб-данные сохраняются в `localStorage` (`inbox-mock-db-v1`), мобильные — в MMKV.
+
+## Мобильное приложение (Android)
+
+Expo SDK 58 / React Native 0.88 (New Architecture, Hermes), expo-router, NativeWind для layout (цвета — из общих TS-токенов `@inbox/ui-core`).
+
+```bash
+# Запуск (Metro + Expo Go / dev-сборка):
+cd apps/mobile && pnpm start
+
+# Нативная сборка и установка на эмулятор/устройство:
+ANDROID_HOME="$HOME/Library/Android/sdk" \
+JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" \
+  npx expo run:android
+
+# Debug-APK без Expo CLI (после expo prebuild --platform android):
+cd apps/mobile/android && \
+JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" \
+  ./gradlew assembleDebug
+# APK: apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+Папка `android/` генерируется командой `npx expo prebuild --platform android` и не коммитится (CNG). Реальный бэкенд включается переменной `EXPO_PUBLIC_API_BASE_URL` (аналог `VITE_API_BASE_URL`). Приём «Поделиться» из других приложений работает через expo-sharing (intent-фильтры ACTION_SEND регистрирует config-плагин).
 
 ## Переключение на реальное API
 
