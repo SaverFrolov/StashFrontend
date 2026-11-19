@@ -33,7 +33,7 @@ function ThemedShell() {
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: "#000000" },
+            contentContainerStyle: { backgroundColor: "#000000", flex: 1 },
             animation: "fade",
           }}
         >
