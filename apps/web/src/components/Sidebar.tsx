@@ -193,7 +193,7 @@ export function Sidebar({
 
         <div className="mt-4 flex flex-col gap-0.5">
           {navItem("/tags", <TagIcon size={20} strokeWidth={1.5} />, t("shell.tags"))}
-          {navItem("/admin", <Shield size={20} strokeWidth={1.5} />, t("shell.admin"))}
+          {session?.user.isAdmin && navItem("/admin", <Shield size={20} strokeWidth={1.5} />, t("shell.admin"))}
           <button
             type="button"
             onClick={() => {

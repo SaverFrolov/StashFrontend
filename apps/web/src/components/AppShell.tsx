@@ -98,7 +98,11 @@ function AppShellInner() {
         {/* Desktop top bar — data-condensed is set when the feed filter bar docks in */}
         <header
           data-condensed={condensed ? "true" : undefined}
-          className="sticky top-0 z-30 hidden h-[var(--header-h)] items-center gap-3 border-b border-glass-border bg-surface px-4 lg:flex"
+          className={cn(
+            "sticky top-0 z-30 hidden h-[var(--header-h)] items-center gap-3 border-b border-glass-border bg-surface px-4 lg:flex",
+            // reserve room for the docked filter bar so the New note button never overlaps it
+            condensed && "pr-[calc(50vw+1rem)]",
+          )}
         >
           <IconButton
             label={collapsed ? t("shell.expandSidebar") : t("shell.collapseSidebar")}
@@ -128,13 +132,13 @@ function AppShellInner() {
             </kbd>
           </button>
           <div className="flex-1" />
-          {session && !condensed && (
+          {session && (
             <button
               type="button"
               onClick={() => {
                 window.dispatchEvent(new CustomEvent("inbox:focus-composer"));
               }}
-              className="hidden h-9 items-center gap-2 rounded-control border border-border-strong bg-surface px-3 text-base font-medium text-text hover:bg-surface-subtle xl:inline-flex"
+              className="hidden h-9 shrink-0 items-center gap-2 rounded-control border border-border-strong bg-surface px-3 text-base font-medium text-text hover:bg-surface-subtle lg:inline-flex"
             >
               <Plus size={16} strokeWidth={1.5} aria-hidden />
               {t("shell.newNote")}
