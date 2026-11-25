@@ -124,9 +124,6 @@ export default function TagsTab() {
             <Text style={[styles.cellText, styles.countCell, { color: tokens.textTertiary, fontFamily: fonts.medium }]}>
               {t("tags.columnCount")}
             </Text>
-            <Text style={[styles.cellText, styles.originCell, { color: tokens.textTertiary, fontFamily: fonts.medium }]}>
-              {t("tags.columnOrigin")}
-            </Text>
             <View style={styles.actionsCell} />
           </View>
 
@@ -188,12 +185,6 @@ export default function TagsTab() {
                   ]}
                 >
                   {counts?.[tag.name] ?? 0}
-                </Text>
-                <Text
-                  numberOfLines={1}
-                  style={[styles.cellText, styles.originCell, { color: tokens.textTertiary, fontFamily: fonts.regular }]}
-                >
-                  {tag.origin === "user" ? t("tags.originUser") : t("tags.originAi")}
                 </Text>
 
                 <View style={styles.actionsCell}>
@@ -361,9 +352,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   checkCell: { width: 28 },
-  countCell: { width: 44, textAlign: "right" },
-  originCell: { width: 72 },
-  actionsCell: { flexDirection: "row", width: 64, justifyContent: "flex-end", gap: 4 },
+  countCell: { width: 56, textAlign: "right" },
+  actionsCell: { flexDirection: "row", width: 56, justifyContent: "flex-end", gap: 4 },
   checkbox: {
     width: 20,
     height: 20,

@@ -12,7 +12,6 @@ import { ThemeProvider, useTheme } from "../src/theme/ThemeProvider";
 import { AuthProvider } from "../src/state/AuthContext";
 import { ToastProvider } from "../src/components/Toast";
 import { BottomSheetModalProvider } from "../src/components/Sheet";
-import { AuroraBackground } from "../src/components/AuroraBackground";
 import { OfflineBanner } from "../src/components/OfflineBanner";
 import { SessionExpiredDialog } from "../src/components/SessionExpiredDialog";
 import { ErrorBoundary } from "../src/components/ErrorBoundary";
@@ -28,16 +27,13 @@ const queryClient = new QueryClient({
 });
 
 function ThemedShell() {
-  const { theme } = useTheme();
   return (
     <>
-      <AuroraBackground />
-      <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <ToastProvider>
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: "transparent" },
+            contentContainerStyle: { backgroundColor: "#000000", flex: 1 },
             animation: "fade",
           }}
         >

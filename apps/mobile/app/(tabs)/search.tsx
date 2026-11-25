@@ -12,7 +12,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Filter, Search as SearchIcon, X } from "lucide-react-native";
+import { Filter, Mic, Paperclip, Search as SearchIcon, X } from "lucide-react-native";
 import type { Item, ItemType, SearchFilters, SearchMode, SearchResult } from "@inbox/api-client";
 import { features } from "@inbox/api-client";
 import { radii, rgba, statusLabelKey } from "@inbox/ui-core";
@@ -189,7 +189,7 @@ export default function SearchTab() {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
       >
-        {/* Large search input (bright green outline — web parity) */}
+        {/* Search input with mic/attachment (bright green outline — web parity) */}
         <View
           style={[
             styles.searchBox,
@@ -200,7 +200,7 @@ export default function SearchTab() {
             },
           ]}
         >
-          <SearchIcon size={20} color={tokens.textTertiary} strokeWidth={1.5} />
+          <SearchIcon size={18} color={tokens.textTertiary} strokeWidth={1.5} />
           <TextInput
             value={query}
             onChangeText={setQuery}
@@ -211,13 +211,29 @@ export default function SearchTab() {
             autoCorrect={false}
             style={{
               flex: 1,
-              minHeight: 52,
+              minHeight: 40,
               color: tokens.text,
               fontFamily: fonts.regular,
-              fontSize: 16,
-              lineHeight: 24,
+              fontSize: 14,
+              lineHeight: 20,
             }}
           />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("search.placeholder")}
+            hitSlop={8}
+            style={({ pressed }) => [styles.iconBtn, pressed && { opacity: 0.6 }]}
+          >
+            <Mic size={18} color={tokens.textSecondary} strokeWidth={1.5} />
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("common.attach")}
+            hitSlop={8}
+            style={({ pressed }) => [styles.iconBtn, pressed && { opacity: 0.6 }]}
+          >
+            <Paperclip size={18} color={tokens.textSecondary} strokeWidth={1.5} />
+          </Pressable>
           {query ? (
             <Pressable accessibilityRole="button" accessibilityLabel={t("common.close")} onPress={() => setQuery("")} hitSlop={8}>
               <X size={16} color={tokens.textTertiary} strokeWidth={1.5} />
@@ -406,10 +422,11 @@ const styles = StyleSheet.create({
   searchBox: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 8,
     borderWidth: StyleSheet.hairlineWidth,
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
   },
+  iconBtn: { padding: 4 },
   modeRow: {
     flexDirection: "row",
     alignItems: "center",

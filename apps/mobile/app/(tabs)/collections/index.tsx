@@ -45,10 +45,10 @@ export default function CollectionsTab() {
           {t("collections.title")}
         </Text>
         <Button
-          size="sm"
+          size="md"
           variant="primary"
           label={t("collections.newCollection")}
-          icon={<Plus size={14} color="#FFFFFF" strokeWidth={1.5} />}
+          icon={<Plus size={16} color="#FFFFFF" strokeWidth={1.5} />}
           onPress={() => formRef.current?.open()}
         />
       </View>
@@ -101,10 +101,7 @@ export default function CollectionsTab() {
               </View>
               <View style={styles.rowMeta}>
                 <Text style={{ color: tokens.textTertiary, fontFamily: fonts.regular, fontSize: 11, fontVariant: ["tabular-nums"] }}>
-                  {t("common.itemsCount", { count: counts?.[c.id] ?? 0 })}
-                </Text>
-                <Text style={{ color: tokens.textTertiary, fontFamily: fonts.regular, fontSize: 11 }}>
-                  {t("collections.updated")}: {formatDate(c.updatedAt)}
+                  {formatDate(c.updatedAt)}
                 </Text>
               </View>
             </Pressable>

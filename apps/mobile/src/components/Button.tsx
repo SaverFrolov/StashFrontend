@@ -19,9 +19,8 @@ export interface ButtonProps {
 }
 
 /**
- * Primary: vertical accent gradient + green glow (web parity: shadow-glow).
- * Android colored shadows are unreliable pre-API 28 — elevation is the
- * fallback; an SVG halo replacement is a Phase 7 polish item.
+ * Primary: flat vertical accent gradient matching web's bg-gradient-to-b design.
+ * No shadows or glows — web uses simple CSS gradient, mobile mirrors it.
  */
 export function Button({
   label,
@@ -53,13 +52,7 @@ export function Button({
       borderColor: variant === "ghost" ? "transparent" : variant === "danger" ? tokens.danger : tokens.glassBorder,
       borderWidth: variant === "ghost" ? 0 : StyleSheet.hairlineWidth,
     },
-    isPrimary && {
-      shadowColor: tokens.accent,
-      shadowOpacity: 0.4,
-      shadowRadius: 9,
-      shadowOffset: { width: 0, height: 4 },
-      elevation: 6,
-    },
+    // Primary button is flat like web: gradient only, no shadow-glow
   ];
 
   const content = (
