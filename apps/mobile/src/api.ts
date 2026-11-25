@@ -1,36 +1,13 @@
 import * as SecureStore from "expo-secure-store";
-import { MockApi, RestApi, config } from "@inbox/api-client";
+import { RestApi, config } from "@inbox/api-client";
 import type { ApiClient, Session } from "@inbox/api-client";
-import { mmkvStorage } from "./storage";
-
-type ItemUpdatedListener = (id: string) => void;
-
-const listeners = new Set<ItemUpdatedListener>();
-
-/**
- * Subscribe to mock pipeline item updates (the mobile counterpart of the
- * web's `inbox:mock-item-updated` window event). Returns an unsubscribe fn.
- */
-export function onItemUpdated(listener: ItemUpdatedListener): () => void {
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-  };
-}
 
 let client: ApiClient | null = null;
 
-/** RestApi when EXPO_PUBLIC_API_BASE_URL is set, MockApi (MMKV-backed) otherwise. */
+/** Always REST. EXPO_PUBLIC_API_BASE_URL overrides the default same-origin URL. */
 export function getApiClient(): ApiClient {
   if (!client) {
-    client = config.apiBaseUrl
-      ? new RestApi(config.apiBaseUrl)
-      : new MockApi({
-          storage: mmkvStorage,
-          onItemUpdated: (id) => {
-            listeners.forEach((listener) => listener(id));
-          },
-        });
+    client = new RestApi(config.apiBaseUrl ?? "");
   }
   return client;
 }
@@ -38,9 +15,8 @@ export function getApiClient(): ApiClient {
 const SESSION_STORE_KEY = "auth-session";
 
 /**
- * Restore the persisted session at startup. MockApi restores itself from its
- * MMKV storage; RestApi keeps the session in memory only, so mobile persists
- * it in SecureStore (expo-secure-store) and re-injects it here.
+ * Restore the persisted session at startup. RestApi keeps the session in
+ * memory only, so mobile persists it in SecureStore and re-injects it here.
  */
 export async function initAuth(): Promise<void> {
   const api = getApiClient();
@@ -63,6 +39,6 @@ export async function persistSession(session: Session | null): Promise<void> {
       await SecureStore.deleteItemAsync(SESSION_STORE_KEY);
     }
   } catch {
-    /* non-fatal: mock mode also persists via MMKV */
+    /* non-fatal */
   }
 }

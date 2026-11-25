@@ -19,6 +19,33 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
+// Stub the real REST API: session on signin, empty collections elsewhere.
+const session = { token: "test-token", user: { id: "u1", name: "Demo", email: "demo@inbox.test" } };
+vi.stubGlobal(
+  "fetch",
+  vi.fn(async (input: RequestInfo | URL) => {
+    const path = String(input);
+    const body = path.includes("/auth/signin")
+      ? session
+      : path.includes("/attention-count")
+        ? { count: 0 }
+        : path.includes("/items")
+          ? { items: [], hasMore: false, total: 0 }
+          : path.includes("/settings/ai")
+            ? { provider: "openai", baseUrl: "https://ru.airouter.host/v1", model: "m", apiKeySet: false, autoProcess: true }
+            : path.includes("/usage")
+              ? { bytesUsed: 0 }
+              : [];
+    return {
+      ok: true,
+      status: 200,
+      json: async () => body,
+      text: async () => JSON.stringify(body),
+      headers: new Headers(),
+    };
+  }),
+);
+
 import { App } from "../src/App";
 import { initI18n } from "../src/i18n";
 
@@ -29,7 +56,6 @@ beforeAll(() => {
 
 afterEach(() => {
   cleanup();
-  localStorage.removeItem("inbox-mock-session-v1");
 });
 
 describe("App smoke", () => {
@@ -40,7 +66,7 @@ describe("App smoke", () => {
     expect(screen.getByLabelText("Пароль")).toBeTruthy();
   });
 
-  it("signs in and shows the seeded inbox feed", async () => {
+  it("signs in against the REST API and shows the inbox shell", async () => {
     render(<App />);
     fireEvent.change(screen.getByLabelText("Эл. почта"), {
       target: { value: "demo@inbox.test" },
@@ -50,7 +76,6 @@ describe("App smoke", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Войти" }));
 
-    // App shell + composer render after the mock sign-in latency
     await waitFor(
       () => {
         expect(screen.getByPlaceholderText(/Вставьте ссылку/)).toBeTruthy();
@@ -58,14 +83,10 @@ describe("App smoke", () => {
       { timeout: 5000 },
     );
 
-    // Seeded items arrive through the mocked API (300–900 ms latency)
-    await waitFor(
-      () => {
-        expect(screen.getByText("Classic spaghetti carbonara — recipe")).toBeTruthy();
-      },
-      { timeout: 5000 },
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/auth/signin"),
+      expect.objectContaining({ method: "POST" }),
     );
-
     expect(screen.queryByText("Something broke")).toBeNull();
   });
 });

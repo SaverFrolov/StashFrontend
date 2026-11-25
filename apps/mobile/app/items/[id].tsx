@@ -41,7 +41,7 @@ import { VideoView, useVideoPlayer } from "expo-video";
 import type { Item, ItemPatch } from "@inbox/api-client";
 import { radii, rgba, statusLabelKey } from "@inbox/ui-core";
 import { fonts, useTheme } from "../../src/theme/ThemeProvider";
-import { getApiClient, onItemUpdated } from "../../src/api";
+import { getApiClient } from "../../src/api";
 import { useAuth } from "../../src/state/AuthContext";
 import { ScreenHeader } from "../../src/components/ScreenHeader";
 import { StatusChip } from "../../src/components/StatusChip";
@@ -151,6 +151,11 @@ export default function ItemDetailRoute() {
     queryKey: ["item", id],
     queryFn: () => api.getItem(id!),
     enabled: Boolean(id),
+    // Live pipeline updates: poll while the item is being processed.
+    refetchInterval: (query) =>
+      query.state.data?.status === "extracting" || query.state.data?.status === "annotating"
+        ? 3000
+        : false,
   });
   const relatedQuery = useQuery({
     queryKey: ["related", id],
@@ -159,15 +164,13 @@ export default function ItemDetailRoute() {
   });
   const collectionsQuery = useQuery({ queryKey: ["collections"], queryFn: () => api.listCollections() });
 
-  // Live pipeline updates for this item
+  const itemStatus = itemQuery.data?.status;
   useEffect(() => {
-    return onItemUpdated((updatedId) => {
-      if (updatedId === id) {
-        void queryClient.invalidateQueries({ queryKey: ["item", id] });
-      }
+    if (itemStatus && itemStatus !== "extracting" && itemStatus !== "annotating") {
       void queryClient.invalidateQueries({ queryKey: ["feed"] });
-    });
-  }, [id, queryClient]);
+      void queryClient.invalidateQueries({ queryKey: ["attention-count"] });
+    }
+  }, [itemStatus, queryClient]);
 
   const patch = useMutation({
     mutationFn: (p: ItemPatch) => api.patchItem(id!, p),

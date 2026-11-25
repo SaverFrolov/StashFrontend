@@ -298,8 +298,8 @@ export class RestApi implements ApiClient {
       body: JSON.stringify(options),
     });
     if (!res.ok) throw new Error(`API error ${res.status}`);
-    // Text-based transport (mock-compatible). A real binary ZIP export would
-    // need an ArrayBuffer channel — out of scope until a real backend exists.
+    // Text-based transport. A binary ZIP export would need an ArrayBuffer
+    // channel — out of scope (JSON/Markdown only, per product decision).
     const data = await res.text();
     const mime =
       res.headers.get("content-type")?.split(";")[0] ??

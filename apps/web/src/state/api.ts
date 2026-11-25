@@ -9,6 +9,3 @@ export const ApiContext = createContext<ApiClient>(apiInstance);
 export function useApi(): ApiClient {
   return useContext(ApiContext);
 }
-
-/** Event emitted by MockApi when a pipeline step updates an item. */
-export const ITEM_UPDATED_EVENT = "inbox:mock-item-updated";

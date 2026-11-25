@@ -58,6 +58,23 @@ export function typeFromMime(mime: string, name: string): ItemType {
   return "docx";
 }
 
+export function isUrl(text: string): boolean {
+  try {
+    const u = new URL(text.trim());
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+export function splitUrlAndComment(text: string): { url: string; rest: string } | null {
+  const match = text.match(/https?:\/\/[^\s]+/);
+  if (!match) return null;
+  const urls = text.match(/https?:\/\/[^\s]+/g) ?? [];
+  if (urls.length !== 1) return null;
+  return { url: match[0], rest: text.replace(match[0], "").trim() };
+}
+
 export const FEED_PAGE_SIZE = 20;
 
 export interface AppConfig {
