@@ -8,6 +8,7 @@ import { features, isAllowedUploadFile, splitUrlAndComment } from "@inbox/api-cl
 import { radii } from "@inbox/ui-core";
 import { fonts, useTheme } from "../theme/ThemeProvider";
 import { getApiClient } from "../api";
+import { toDataUrl } from "../lib/dataUrl";
 import { COMPOSER_DRAFT_KEY, mmkv } from "../storage";
 import { useToast } from "./Toast";
 import { Dialog } from "./Dialog";
@@ -92,7 +93,7 @@ export function Composer() {
           continue;
         }
         await api.saveFile({
-          file: { uri: asset.uri, name, mimeType, size: asset.size ?? undefined },
+          file: { uri: await toDataUrl(asset.uri, mimeType), name, mimeType, size: asset.size ?? undefined },
           comment: text.trim() || undefined,
         });
         ok += 1;
@@ -115,7 +116,7 @@ export function Composer() {
     try {
       await api.saveAudio({
         blob: {
-          uri: rec.recordingUri,
+          uri: await toDataUrl(rec.recordingUri, "audio/mp4"),
           name: `voice-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.m4a`,
           mimeType: "audio/mp4",
           size: rec.fileSize || undefined,

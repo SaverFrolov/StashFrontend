@@ -7,7 +7,7 @@ import { FolderPlus, Trash2, X } from "lucide-react";
 import { Button, ItemCardSkeleton, SegmentedControl, cn, useToast } from "@inbox/ui";
 import type { Item } from "@inbox/api-client";
 import { FEED_PAGE_SIZE, features } from "@inbox/api-client";
-import { useApi, ITEM_UPDATED_EVENT } from "../state/api";
+import { useApi } from "../state/api";
 import { useCondensedHeader } from "../state/condensed";
 import { useMediaQuery } from "../state/settings";
 import { ItemCard } from "../components/ItemCard";
@@ -84,17 +84,14 @@ export function Feed({
       if (!lastPage.hasMore || lastPage.items.length === 0) return undefined;
       return lastPage.items[0].capturedAt;
     },
+    // Live pipeline updates: poll while any loaded item is being processed.
+    refetchInterval: (query) =>
+      query.state.data?.pages.some((p) =>
+        p.items.some((i) => i.status === "extracting" || i.status === "annotating"),
+      )
+        ? 3000
+        : false,
   });
-
-  // Live pipeline updates from MockApi
-  useEffect(() => {
-    const handler = () => {
-      void queryClient.invalidateQueries({ queryKey: ["feed"] });
-      void queryClient.invalidateQueries({ queryKey: ["attention-count"] });
-    };
-    window.addEventListener(ITEM_UPDATED_EVENT, handler);
-    return () => window.removeEventListener(ITEM_UPDATED_EVENT, handler);
-  }, [queryClient]);
 
   const items = useMemo(() => {
     const pages = feedQuery.data?.pages ?? [];

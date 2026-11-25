@@ -5,3 +5,6 @@ coverage/
 *.local
 .DS_Store
 *.log
+
+# Desktop app build artifacts (large binaries, not pushed to GitHub)
+apps/desktop/dist-electron/

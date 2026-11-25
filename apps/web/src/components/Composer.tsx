@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link2, Mic, Paperclip, Pause, Play, Send, Square, Trash2, WifiOff } from "lucide-react";
 import { cn } from "@inbox/ui";
 import { features, splitUrlAndComment } from "@inbox/api-client";
-import { useApi, ITEM_UPDATED_EVENT } from "../state/api";
+import { useApi } from "../state/api";
 import { useOnline } from "../state/settings";
 import { useModals } from "../modals/ModalProvider";
 import { formatDuration, domainOf } from "../lib/format";
@@ -68,13 +68,6 @@ export function Composer() {
     void queryClient.invalidateQueries({ queryKey: ["feed"] });
     void queryClient.invalidateQueries({ queryKey: ["attention-count"] });
   }, [queryClient]);
-
-  // Live status updates from MockApi pipeline
-  useEffect(() => {
-    const handler = () => invalidate();
-    window.addEventListener(ITEM_UPDATED_EVENT, handler);
-    return () => window.removeEventListener(ITEM_UPDATED_EVENT, handler);
-  }, [invalidate]);
 
   const saveText = useMutation({
     mutationFn: async (value: string) => {

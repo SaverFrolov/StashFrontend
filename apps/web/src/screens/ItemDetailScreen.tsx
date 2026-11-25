@@ -37,7 +37,7 @@ import {
 } from "@inbox/ui";
 import type { Item } from "@inbox/api-client";
 import { features } from "@inbox/api-client";
-import { useApi, ITEM_UPDATED_EVENT } from "../state/api";
+import { useApi } from "../state/api";
 import { useMediaQuery } from "../state/settings";
 import { useModals } from "../modals/ModalProvider";
 import { Feed } from "./InboxScreen";
@@ -97,6 +97,11 @@ export function ItemDetailScreen() {
     queryKey: ["item", id],
     queryFn: () => api.getItem(id!),
     enabled: Boolean(id),
+    // Live pipeline updates: poll while the item is being processed.
+    refetchInterval: (query) =>
+      query.state.data?.status === "extracting" || query.state.data?.status === "annotating"
+        ? 3000
+        : false,
   });
 
   const relatedQuery = useQuery({
@@ -107,14 +112,13 @@ export function ItemDetailScreen() {
 
   const collectionsQuery = useQuery({ queryKey: ["collections"], queryFn: () => api.listCollections() });
 
+  const itemStatus = itemQuery.data?.status;
   useEffect(() => {
-    const handler = () => {
-      void queryClient.invalidateQueries({ queryKey: ["item", id] });
+    if (itemStatus && itemStatus !== "extracting" && itemStatus !== "annotating") {
       void queryClient.invalidateQueries({ queryKey: ["feed"] });
-    };
-    window.addEventListener(ITEM_UPDATED_EVENT, handler);
-    return () => window.removeEventListener(ITEM_UPDATED_EVENT, handler);
-  }, [queryClient, id]);
+      void queryClient.invalidateQueries({ queryKey: ["attention-count"] });
+    }
+  }, [itemStatus, queryClient]);
 
   const item = itemQuery.data;
 

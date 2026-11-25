@@ -8,7 +8,7 @@ import { Field, Input } from "../../src/components/Field";
 import { useAuth } from "../../src/state/AuthContext";
 import { fonts, useTheme } from "../../src/theme/ThemeProvider";
 
-/** S1 /login — MockApi accepts any credentials (demo). */
+/** S1 /login — signs in against the REST API. */
 export default function LoginScreen() {
   const { t } = useTranslation();
   const { tokens } = useTheme();

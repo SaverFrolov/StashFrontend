@@ -14,6 +14,7 @@ import { ItemDetailScreen } from "./screens/ItemDetailScreen";
 import { SearchScreen } from "./screens/SearchScreen";
 import { CollectionsScreen, CollectionDetailScreen } from "./screens/CollectionsScreen";
 import { TagsScreen } from "./screens/TagsScreen";
+import { AdminScreen } from "./screens/AdminScreen";
 import { SettingsScreen } from "./screens/SettingsScreen";
 import { CaptureScreen } from "./screens/CaptureScreen";
 import { NotFoundScreen } from "./screens/NotFoundScreen";
@@ -57,6 +58,7 @@ export function App() {
                             <Route path="/collections" element={<CollectionsScreen />} />
                             <Route path="/collections/:id" element={<CollectionDetailScreen />} />
                             <Route path="/tags" element={<TagsScreen />} />
+                            <Route path="/admin" element={<AdminScreen />} />
                             <Route path="/settings/*" element={<SettingsScreen />} />
                             <Route path="*" element={<NotFoundScreen />} />
                           </Route>

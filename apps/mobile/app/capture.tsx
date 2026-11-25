@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as DocumentPicker from "expo-document-picker";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system/legacy";
+import { toDataUrl } from "../src/lib/dataUrl";
 import { Check, File as FileIcon, Mic, Paperclip, Square, X } from "lucide-react-native";
 import { features, isAllowedUploadFile, splitUrlAndComment } from "@inbox/api-client";
 import { radii, rgba } from "@inbox/ui-core";
@@ -129,7 +130,7 @@ export default function CaptureRoute() {
       if (rec.phase === "stopped" && rec.recordingUri) {
         await api.saveAudio({
           blob: {
-            uri: rec.recordingUri,
+            uri: await toDataUrl(rec.recordingUri, "audio/mp4"),
             name: `voice-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.m4a`,
             mimeType: "audio/mp4",
             size: rec.fileSize || undefined,
@@ -144,7 +145,7 @@ export default function CaptureRoute() {
             continue;
           }
           await api.saveFile({
-            file: { uri: f.uri, name: f.name, mimeType: f.mimeType },
+            file: { uri: await toDataUrl(f.uri, f.mimeType), name: f.name, mimeType: f.mimeType },
             comment: commentValue,
           });
         }

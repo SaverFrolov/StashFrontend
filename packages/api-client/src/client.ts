@@ -1,4 +1,5 @@
 import type {
+  AdminOverview,
   AiSettings,
   ApiToken,
   AttentionCount,
@@ -18,6 +19,7 @@ import type {
   SearchFilters,
   SearchResult,
   Session,
+  SessionStorage,
   Tag,
   UsageInfo,
 } from "./types";
@@ -82,6 +84,10 @@ export interface ApiClient {
   // export / usage
   exportData(options: ExportOptions): Promise<ExportResult>;
   usage(): Promise<UsageInfo>;
+
+  // admin (owner only; server returns 403 for everyone else)
+  adminOverview(): Promise<AdminOverview>;
+  adminDeleteUser(id: string): Promise<void>;
 }
 
 export const ATTENTION_STATUSES: ItemStatus[] = [
@@ -99,12 +105,30 @@ function qs(params: Record<string, string | number | boolean | undefined>): stri
   return s ? `?${s}` : "";
 }
 
+const SESSION_KEY = "stash-session";
+
 /** REST implementation used when VITE_API_BASE_URL is set. */
 export class RestApi implements ApiClient {
   constructor(
     private baseUrl: string,
     private session: Session | null = null,
-  ) {}
+    private storage?: SessionStorage,
+  ) {
+    if (!this.session && storage) {
+      try {
+        const raw = storage.getItem(SESSION_KEY);
+        if (raw) this.session = JSON.parse(raw) as Session;
+      } catch {
+        storage.removeItem(SESSION_KEY);
+      }
+    }
+  }
+
+  private persistSession(): void {
+    if (!this.storage) return;
+    if (this.session) this.storage.setItem(SESSION_KEY, JSON.stringify(this.session));
+    else this.storage.removeItem(SESSION_KEY);
+  }
 
   private async req<T>(path: string, init?: RequestInit): Promise<T> {
     const headers = new Headers(init?.headers);
@@ -122,6 +146,7 @@ export class RestApi implements ApiClient {
       body: JSON.stringify({ email, password }),
     });
     this.session = s;
+    this.persistSession();
     return s;
   }
 
@@ -131,6 +156,7 @@ export class RestApi implements ApiClient {
       body: JSON.stringify({ name, email, password }),
     });
     this.session = s;
+    this.persistSession();
     return s;
   }
 
@@ -140,6 +166,7 @@ export class RestApi implements ApiClient {
 
   async signOut(): Promise<void> {
     this.session = null;
+    this.persistSession();
   }
 
   getSession(): Session | null {
@@ -149,6 +176,7 @@ export class RestApi implements ApiClient {
   /** Restore a persisted session (used by the mobile SecureStore bootstrap). */
   restoreSession(session: Session): void {
     this.session = session;
+    this.persistSession();
   }
 
   listItems(opts: { cursor?: string; limit?: number; filter?: "all" | "attention" | ItemType }): Promise<Page<Item>> {
@@ -298,8 +326,8 @@ export class RestApi implements ApiClient {
       body: JSON.stringify(options),
     });
     if (!res.ok) throw new Error(`API error ${res.status}`);
-    // Text-based transport (mock-compatible). A real binary ZIP export would
-    // need an ArrayBuffer channel — out of scope until a real backend exists.
+    // Text-based transport. A binary ZIP export would need an ArrayBuffer
+    // channel — out of scope (JSON/Markdown only, per product decision).
     const data = await res.text();
     const mime =
       res.headers.get("content-type")?.split(";")[0] ??
@@ -310,5 +338,13 @@ export class RestApi implements ApiClient {
 
   usage(): Promise<UsageInfo> {
     return this.req<UsageInfo>("/usage");
+  }
+
+  adminOverview(): Promise<AdminOverview> {
+    return this.req<AdminOverview>("/admin/users");
+  }
+
+  adminDeleteUser(id: string): Promise<void> {
+    return this.req<void>(`/admin/users/${id}`, { method: "DELETE" });
   }
 }

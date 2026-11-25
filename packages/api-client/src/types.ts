@@ -209,12 +209,28 @@ export interface UsageInfo {
   bytesUsed: number;
 }
 
-/** Key-value storage injected into MockApi: localStorage on web, MMKV/AsyncStorage on mobile. */
-export interface StorageAdapter {
+/** Sync key-value storage for session persistence (localStorage on web). */
+export interface SessionStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
 }
+
+/** Admin panel: one registered user with usage counters. */
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+  items: number;
+  bytesUsed: number;
+}
+
+export interface AdminOverview {
+  users: AdminUser[];
+  totals: { users: number; items: number; bytesUsed: number };
+}
+
 
 /** Neutral export payload: platforms wrap it themselves (Blob on web, file on mobile). */
 export interface ExportResult {
