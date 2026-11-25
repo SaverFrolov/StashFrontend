@@ -296,7 +296,10 @@
     "dataStorage": "Storage used",
     "aboutVersion": "Version",
     "aboutLicenses": "Open-source licenses",
-    "aboutLicensesList": "React, Vite, TanStack Query, Tailwind CSS, Radix UI, lucide-react, react-i18next, Zod — MIT and Apache-2.0."
+    "aboutLicensesList": "React, Vite, TanStack Query, Tailwind CSS, Radix UI, lucide-react, react-i18next, Zod — MIT and Apache-2.0.",
+    "currentPassword": "Current password",
+    "currentPasswordWrong": "Current password is wrong",
+    "saveFailed": "Could not save changes"
   },
   "capture": {
     "title": "Quick capture",

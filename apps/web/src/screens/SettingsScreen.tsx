@@ -128,14 +128,26 @@ function AccountSection() {
 
   const [name, setName] = useState(session?.user.name ?? "");
   const [password, setPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
 
   const updateMutation = useMutation({
     mutationFn: async () => {
-      await api.updateAccount({ name: name.trim() || undefined, password: password || undefined });
+      await api.updateAccount({
+        name: name.trim() || undefined,
+        password: password || undefined,
+        currentPassword: password ? currentPassword : undefined,
+      });
     },
     onSuccess: () => {
       setPassword("");
+      setCurrentPassword("");
       toast.toast({ variant: "success", message: t("settings.passwordChanged") });
+    },
+    onError: () => {
+      toast.toast({
+        variant: "error",
+        message: password ? t("settings.currentPasswordWrong") : t("settings.saveFailed"),
+      });
     },
   });
 
@@ -175,11 +187,26 @@ function AccountSection() {
               placeholder={t("settings.changePassword")}
             />
           </Field>
+          {password && (
+            <Field label={t("settings.currentPassword")} htmlFor="acc-current-password">
+              <Input
+                id="acc-current-password"
+                type="password"
+                autoComplete="current-password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+            </Field>
+          )}
           <div>
             <Button
               variant="primary"
               onClick={() => updateMutation.mutate()}
-              disabled={updateMutation.isPending || (!password && name === session?.user.name)}
+              disabled={
+                updateMutation.isPending ||
+                (!password && name === session?.user.name) ||
+                (Boolean(password) && !currentPassword)
+              }
             >
               {t("common.save")}
             </Button>

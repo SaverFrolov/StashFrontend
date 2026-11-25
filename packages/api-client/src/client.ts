@@ -73,7 +73,7 @@ export interface ApiClient {
   getAiSettings(): Promise<AiSettings>;
   saveAiSettings(settings: Partial<AiSettings> & { apiKey?: string }): Promise<AiSettings>;
   testAiConnection(): Promise<{ ok: boolean; message?: string }>;
-  updateAccount(patch: { name?: string; password?: string }): Promise<void>;
+  updateAccount(patch: { name?: string; password?: string; currentPassword?: string }): Promise<void>;
   deleteAccount(): Promise<void>;
 
   // api tokens
@@ -294,7 +294,7 @@ export class RestApi implements ApiClient {
     return this.req<{ ok: boolean; message?: string }>("/settings/ai/test", { method: "POST" });
   }
 
-  updateAccount(patch: { name?: string; password?: string }): Promise<void> {
+  updateAccount(patch: { name?: string; password?: string; currentPassword?: string }): Promise<void> {
     return this.req<void>("/account", { method: "PATCH", body: JSON.stringify(patch) });
   }
 
