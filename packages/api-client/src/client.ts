@@ -1,4 +1,5 @@
 import type {
+  AdminOverview,
   AiSettings,
   ApiToken,
   AttentionCount,
@@ -82,6 +83,10 @@ export interface ApiClient {
   // export / usage
   exportData(options: ExportOptions): Promise<ExportResult>;
   usage(): Promise<UsageInfo>;
+
+  // admin (owner only; server returns 403 for everyone else)
+  adminOverview(): Promise<AdminOverview>;
+  adminDeleteUser(id: string): Promise<void>;
 }
 
 export const ATTENTION_STATUSES: ItemStatus[] = [
@@ -310,5 +315,13 @@ export class RestApi implements ApiClient {
 
   usage(): Promise<UsageInfo> {
     return this.req<UsageInfo>("/usage");
+  }
+
+  adminOverview(): Promise<AdminOverview> {
+    return this.req<AdminOverview>("/admin/users");
+  }
+
+  adminDeleteUser(id: string): Promise<void> {
+    return this.req<void>(`/admin/users/${id}`, { method: "DELETE" });
   }
 }

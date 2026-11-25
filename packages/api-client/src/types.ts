@@ -209,6 +209,21 @@ export interface UsageInfo {
   bytesUsed: number;
 }
 
+/** Admin panel: one registered user with usage counters. */
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+  items: number;
+  bytesUsed: number;
+}
+
+export interface AdminOverview {
+  users: AdminUser[];
+  totals: { users: number; items: number; bytesUsed: number };
+}
+
 
 /** Neutral export payload: platforms wrap it themselves (Blob on web, file on mobile). */
 export interface ExportResult {
