@@ -209,6 +209,13 @@ export interface UsageInfo {
   bytesUsed: number;
 }
 
+/** Sync key-value storage for session persistence (localStorage on web). */
+export interface SessionStorage {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
 /** Admin panel: one registered user with usage counters. */
 export interface AdminUser {
   id: string;

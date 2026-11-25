@@ -19,6 +19,7 @@ import type {
   SearchFilters,
   SearchResult,
   Session,
+  SessionStorage,
   Tag,
   UsageInfo,
 } from "./types";
@@ -104,12 +105,30 @@ function qs(params: Record<string, string | number | boolean | undefined>): stri
   return s ? `?${s}` : "";
 }
 
+const SESSION_KEY = "stash-session";
+
 /** REST implementation used when VITE_API_BASE_URL is set. */
 export class RestApi implements ApiClient {
   constructor(
     private baseUrl: string,
     private session: Session | null = null,
-  ) {}
+    private storage?: SessionStorage,
+  ) {
+    if (!this.session && storage) {
+      try {
+        const raw = storage.getItem(SESSION_KEY);
+        if (raw) this.session = JSON.parse(raw) as Session;
+      } catch {
+        storage.removeItem(SESSION_KEY);
+      }
+    }
+  }
+
+  private persistSession(): void {
+    if (!this.storage) return;
+    if (this.session) this.storage.setItem(SESSION_KEY, JSON.stringify(this.session));
+    else this.storage.removeItem(SESSION_KEY);
+  }
 
   private async req<T>(path: string, init?: RequestInit): Promise<T> {
     const headers = new Headers(init?.headers);
@@ -127,6 +146,7 @@ export class RestApi implements ApiClient {
       body: JSON.stringify({ email, password }),
     });
     this.session = s;
+    this.persistSession();
     return s;
   }
 
@@ -136,6 +156,7 @@ export class RestApi implements ApiClient {
       body: JSON.stringify({ name, email, password }),
     });
     this.session = s;
+    this.persistSession();
     return s;
   }
 
@@ -145,6 +166,7 @@ export class RestApi implements ApiClient {
 
   async signOut(): Promise<void> {
     this.session = null;
+    this.persistSession();
   }
 
   getSession(): Session | null {
@@ -154,6 +176,7 @@ export class RestApi implements ApiClient {
   /** Restore a persisted session (used by the mobile SecureStore bootstrap). */
   restoreSession(session: Session): void {
     this.session = session;
+    this.persistSession();
   }
 
   listItems(opts: { cursor?: string; limit?: number; filter?: "all" | "attention" | ItemType }): Promise<Page<Item>> {

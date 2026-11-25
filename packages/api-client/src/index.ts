@@ -8,8 +8,9 @@ export type { ApiClient } from "./client";
 import { config } from "./config";
 import { RestApi } from "./client";
 import type { ApiClient } from "./client";
+import type { SessionStorage } from "./types";
 
 /** Always REST. Empty base URL = same origin (API serves the built frontend). */
-export function createApiClient(): ApiClient {
-  return new RestApi(config.apiBaseUrl ?? "");
+export function createApiClient(storage?: SessionStorage): ApiClient {
+  return new RestApi(config.apiBaseUrl ?? "", null, storage);
 }
