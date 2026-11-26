@@ -4,6 +4,7 @@ import {
   Check,
   File as FileIcon,
   FileText,
+  Image as ImageIcon,
   Link2,
   MoreHorizontal,
   Music,
@@ -29,6 +30,7 @@ export const typeIcons: Record<ItemType, LucideIcon> = {
   audio: Music,
   video: Video,
   xlsx: Sheet,
+  image: ImageIcon,
 };
 
 export interface ItemCardProps {

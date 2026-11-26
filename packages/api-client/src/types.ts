@@ -1,4 +1,4 @@
-export type ItemType = "link" | "text" | "pdf" | "docx" | "audio" | "video" | "xlsx";
+export type ItemType = "link" | "text" | "pdf" | "docx" | "audio" | "video" | "xlsx" | "image";
 
 export type ItemStatus =
   | "saved"

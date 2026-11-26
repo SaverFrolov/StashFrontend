@@ -26,15 +26,28 @@ export const ALLOWED_UPLOAD_EXTENSIONS = [
   ".mov",
   ".m4v",
   ".mkv",
+  // SVG excluded: inline SVG can carry scripts in the site origin.
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".gif",
+  ".webp",
+  ".bmp",
+  ".avif",
 ];
 
+export const ALLOWED_IMAGE_MIME = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/avif"];
+
 /** `accept` attribute value shared by all file pickers. */
-export const FILE_ACCEPT_ATTR = ".pdf,.docx,.xlsx,.xls,.mp3,.wav,.ogg,.m4a,.flac,.aac,.mp4,.webm,.mov,.m4v,.mkv,audio/*,video/*";
+export const FILE_ACCEPT_ATTR =
+  ".pdf,.docx,.xlsx,.xls,.mp3,.wav,.ogg,.m4a,.flac,.aac,.mp4,.webm,.mov,.m4v,.mkv,.jpg,.jpeg,.png,.gif,.webp,.bmp,.avif,audio/*,video/*," +
+  ALLOWED_IMAGE_MIME.join(",");
 
 export function isAllowedUploadFile(file: { name: string; type: string }): boolean {
   const n = file.name.toLowerCase();
   if (ALLOWED_UPLOAD_EXTENSIONS.some((ext) => n.endsWith(ext))) return true;
   if (file.type.startsWith("audio/") || file.type.startsWith("video/")) return true;
+  if (ALLOWED_IMAGE_MIME.includes(file.type)) return true;
   return ALLOWED_FILE_MIME.includes(file.type);
 }
 
@@ -44,6 +57,8 @@ export function typeFromMime(mime: string, name: string): ItemType {
   if (mime === "application/pdf" || (!mime && n.endsWith(".pdf"))) return "pdf";
   if (mime.startsWith("audio/")) return "audio";
   if (mime.startsWith("video/")) return "video";
+  if (ALLOWED_IMAGE_MIME.includes(mime)) return "image";
+  if (!mime && /\.(jpe?g|png|gif|webp|bmp|avif)$/.test(n)) return "image";
   if (
     mime === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
     mime === "application/vnd.ms-excel" ||

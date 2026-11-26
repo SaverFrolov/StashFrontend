@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   ActivityIndicator,
+  Image,
   Linking,
   Pressable,
   ScrollView,
@@ -22,6 +23,7 @@ import {
   ExternalLink,
   File as FileIcon,
   FolderPlus,
+  Image as ImageIcon,
   Link2,
   MoreHorizontal,
   Music,
@@ -212,7 +214,7 @@ export default function ItemDetailRoute() {
   }
 
   const itemCollections = (collectionsQuery.data ?? []).filter((c) => item.collectionIds.includes(c.id));
-  const TypeIcon = item.type === "video" ? VideoIcon : item.type === "audio" ? Music : item.source.url ? Link2 : FileIcon;
+  const TypeIcon = item.type === "video" ? VideoIcon : item.type === "audio" ? Music : item.type === "image" ? ImageIcon : item.source.url ? Link2 : FileIcon;
 
   const openOriginal = async () => {
     const url = item.source.url;
@@ -472,7 +474,7 @@ export default function ItemDetailRoute() {
             </Pressable>
           ) : null}
 
-          {item.original.file && item.type !== "audio" && item.type !== "video" ? (
+          {item.original.file && item.type !== "audio" && item.type !== "video" && item.type !== "image" ? (
             <View style={[styles.fileRow, { borderColor: tokens.glassBorder }]}>
               <FileIcon size={18} color={tokens.textTertiary} strokeWidth={1.5} />
               <View style={{ flex: 1 }}>
@@ -497,6 +499,15 @@ export default function ItemDetailRoute() {
           ) : null}
 
           {item.type === "video" && item.original.file ? <VideoBlock uri={item.original.file.url} /> : null}
+
+          {item.type === "image" && item.original.file ? (
+            <Image
+              source={{ uri: item.original.file.url }}
+              style={{ width: "100%", height: 320, borderRadius: radii.card }}
+              resizeMode="contain"
+              accessibilityLabel={item.original.file.name}
+            />
+          ) : null}
 
           {!item.original.text && !item.original.file && !item.source.url ? (
             <Text style={{ color: tokens.textTertiary, fontFamily: fonts.regular, fontSize: 14 }}>

@@ -458,6 +458,13 @@ function ItemDetailContent({
             aria-label={item.original.file.name}
           />
         )}
+        {item.type === "image" && item.original.file && (
+          <img
+            src={item.original.file.url}
+            alt={item.original.file.name}
+            className="mt-2 max-h-[70vh] w-full rounded-control border border-border object-contain"
+          />
+        )}
         {!item.original.text && !item.original.file && !item.source.url && (
           <p className="text-base text-text-tertiary">{t("item.noOriginalText")}</p>
         )}

@@ -4,6 +4,7 @@ import {
   File as FileIcon,
   FileText,
   FolderPlus,
+  Image as ImageIcon,
   Link2,
   MoreHorizontal,
   ExternalLink,
@@ -26,6 +27,8 @@ export const typeIcon = (type: Item["type"], size = 16) => {
       return <Video size={size} strokeWidth={1.5} aria-hidden />;
     case "xlsx":
       return <Sheet size={size} strokeWidth={1.5} aria-hidden />;
+    case "image":
+      return <ImageIcon size={size} strokeWidth={1.5} aria-hidden />;
     case "pdf":
     case "docx":
       return <FileIcon size={size} strokeWidth={1.5} aria-hidden />;
