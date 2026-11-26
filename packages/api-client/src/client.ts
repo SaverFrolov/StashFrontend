@@ -22,6 +22,7 @@ import type {
   SessionStorage,
   Tag,
   UsageInfo,
+  AskResponse,
 } from "./types";
 
 export interface ApiClient {
@@ -82,6 +83,7 @@ export interface ApiClient {
   revokeApiToken(id: string): Promise<void>;
 
   // export / usage
+  ask(q: string): Promise<AskResponse>;
   exportData(options: ExportOptions): Promise<ExportResult>;
   usage(): Promise<UsageInfo>;
 
@@ -334,6 +336,10 @@ export class RestApi implements ApiClient {
       (options.format === "markdown" ? "text/markdown" : "application/json");
     const ext = options.format === "markdown" ? "md" : "json";
     return { data, mime, filename: `stash-export.${ext}` };
+  }
+
+  ask(q: string): Promise<AskResponse> {
+    return this.req<AskResponse>("/ask", { method: "POST", body: JSON.stringify({ q }) });
   }
 
   usage(): Promise<UsageInfo> {

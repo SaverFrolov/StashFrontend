@@ -238,3 +238,17 @@ export interface ExportResult {
   mime: string;
   filename: string;
 }
+
+export interface AskSource {
+  n: number;
+  itemId: string;
+  title: string;
+  chunkNo: number;
+  type: string;
+  url?: string | null;
+}
+
+export interface AskResponse {
+  answer: string;
+  sources: AskSource[];
+}

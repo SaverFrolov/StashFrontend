@@ -16,6 +16,7 @@ import {
   Tag as TagIcon,
   Folder,
   LogOut,
+ Sparkles,
 } from "lucide-react";
 import { Avatar, Menu, MenuContent, MenuItem, MenuLabel, MenuSeparator, MenuTrigger, cn } from "@inbox/ui";
 import { APP_NAME } from "@inbox/api-client";
@@ -138,6 +139,7 @@ export function Sidebar({
         <div className="flex flex-col gap-0.5">
           {navItem("/inbox", <InboxIcon size={20} strokeWidth={1.5} />, t("shell.inbox"))}
           {navItem("/search", <Search size={20} strokeWidth={1.5} />, t("shell.search"))}
+          {navItem("/ask", <Sparkles size={20} strokeWidth={1.5} />, t("shell.ask", { defaultValue: "Спроси архив" }))}
         </div>
 
         {/* Collections section — plays the role of the chat-history list */}

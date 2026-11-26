@@ -1,0 +1,51 @@
+.ask-page{max-width:820px;margin:0 auto;padding:clamp(18px,3vw,34px);display:flex;flex-direction:column;gap:18px}
+.ask-head{display:flex;align-items:flex-start;gap:14px}
+.ask-badge{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;color:#2DD4BF;
+  background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.35)}
+.ask-head h1{margin:0 0 4px;font-size:clamp(21px,2.6vw,27px);letter-spacing:-.02em;
+  background:linear-gradient(96deg,#E8FBF2,#2DD4BF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ask-head p{margin:0;color:#93B3A8;font-size:13.5px;line-height:1.5}
+.ask-form{display:flex;gap:10px;align-items:stretch}
+.ask-form textarea{flex:1;resize:vertical;min-height:62px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(30,58,51,.9);border-radius:14px;padding:13px 15px;color:#EAF7F1;
+  font:inherit;font-size:14.5px;line-height:1.5;outline:none;transition:.2s}
+.ask-form textarea::placeholder{color:#6C8A80}
+.ask-form textarea:focus{border-color:rgba(45,212,191,.6);background:rgba(45,212,191,.06);box-shadow:0 0 0 3px rgba(45,212,191,.12)}
+.ask-form button{align-self:flex-start;background:linear-gradient(100deg,#2DD4BF,#34D399);color:#04140F;
+  border:0;border-radius:14px;padding:13px 20px;font:inherit;font-weight:650;font-size:14px;cursor:pointer;
+  white-space:nowrap;transition:.2s}
+.ask-form button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 26px -10px rgba(45,212,191,.5)}
+.ask-form button:disabled{opacity:.45;cursor:not-allowed}
+.ask-ideas{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ask-ideas span{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#6C8A80;margin-right:4px}
+.ask-ideas button{background:rgba(255,255,255,.03);border:1px solid rgba(30,58,51,.8);color:#EAF7F1;
+  border-radius:999px;padding:7px 13px;font:inherit;font-size:12.5px;cursor:pointer;transition:.18s}
+.ask-ideas button:hover{border-color:rgba(45,212,191,.5);background:rgba(45,212,191,.07)}
+.ask-skeleton{display:flex;flex-direction:column;gap:10px;padding:6px 0}
+.ask-skeleton i{height:13px;border-radius:7px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(45,212,191,.16),rgba(255,255,255,.05));
+  background-size:220% 100%;animation:askSh 1.3s linear infinite}
+.ask-skeleton i:nth-child(2){width:88%}.ask-skeleton i:nth-child(3){width:64%}
+@keyframes askSh{to{background-position:-220% 0}}
+.ask-error{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;
+  background:rgba(255,93,115,.1);border:1px solid rgba(255,93,115,.35);color:#FFB3BF;font-size:13.5px}
+.ask-error button{margin-left:auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+  color:#FFB3BF;border-radius:8px;padding:5px 11px;font:inherit;font-size:12.5px;cursor:pointer}
+.ask-out{display:flex;flex-direction:column;gap:16px}
+.ask-answer{margin:0;color:#EAF7F1;font-size:15px;line-height:1.72;white-space:pre-wrap}
+.ask-cite{display:inline-block;margin:0 2px;padding:1px 7px;border-radius:6px;font:inherit;font-size:12.5px;
+  font-weight:650;color:#6EE7B7;background:rgba(45,212,191,.14);border:1px solid rgba(45,212,191,.3);cursor:pointer;transition:.15s}
+.ask-cite:hover{background:rgba(45,212,191,.26);color:#EAF7F1}
+.ask-none{margin:0;color:#93B3A8;font-style:italic}
+.ask-srcs{padding-top:14px;border-top:1px solid rgba(30,58,51,.6)}
+.ask-srcs h2{margin:0 0 10px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#6C8A80;font-weight:600}
+.ask-srcs ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ask-srcs li{display:flex;align-items:center;gap:10px}
+.ask-n{display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;font-size:12px;font-weight:700;
+  color:#04140F;background:linear-gradient(100deg,#2DD4BF,#6EE7B7)}
+.ask-srcs li button{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;
+  background:rgba(255,255,255,.03);border:1px solid rgba(30,58,51,.8);border-radius:10px;padding:9px 13px;
+  color:#EAF7F1;font:inherit;cursor:pointer;transition:.18s}
+.ask-srcs li button:hover{border-color:rgba(45,212,191,.5);background:rgba(45,212,191,.07)}
+.ask-srcs strong{font-weight:550;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ask-srcs em{font-style:normal;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6C8A80}
+@media (prefers-reduced-motion:reduce){.ask-skeleton i{animation:none}}

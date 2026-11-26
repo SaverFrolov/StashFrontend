@@ -12,6 +12,7 @@ import { ResetPasswordScreen } from "./screens/ResetPasswordScreen";
 import { InboxScreen } from "./screens/InboxScreen";
 import { ItemDetailScreen } from "./screens/ItemDetailScreen";
 import { SearchScreen } from "./screens/SearchScreen";
+import { AskScreen } from "./screens/AskScreen";
 import { CollectionsScreen, CollectionDetailScreen } from "./screens/CollectionsScreen";
 import { TagsScreen } from "./screens/TagsScreen";
 import { AdminScreen } from "./screens/AdminScreen";
@@ -55,6 +56,7 @@ export function App() {
                             <Route path="/inbox" element={<InboxScreen />} />
                             <Route path="/items/:id" element={<ItemDetailScreen />} />
                             <Route path="/search" element={<SearchScreen />} />
+                            <Route path="/ask" element={<AskScreen />} />
                             <Route path="/collections" element={<CollectionsScreen />} />
                             <Route path="/collections/:id" element={<CollectionDetailScreen />} />
                             <Route path="/tags" element={<TagsScreen />} />
