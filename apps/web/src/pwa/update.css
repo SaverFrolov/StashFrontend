@@ -1,0 +1,44 @@
+.sw-toast{
+  position:fixed;left:50%;transform:translateX(-50%) translateY(14px);
+  bottom:max(18px,env(safe-area-inset-bottom));z-index:1400;
+  display:flex;align-items:center;gap:12px;box-sizing:border-box;
+  width:min(520px,calc(100vw - 24px));min-width:0;
+  padding:12px 14px;border-radius:14px;
+  background:linear-gradient(150deg,#12241F,#081110);
+  border:1px solid rgba(45,212,191,.38);
+  box-shadow:0 22px 50px -22px #000,0 0 46px -26px rgba(45,212,191,.7);
+  color:#EAF7F1;font:inherit;font-size:13.5px;line-height:1.4;
+  opacity:0;pointer-events:none;transition:opacity .26s ease,transform .26s cubic-bezier(.2,.9,.25,1);
+}
+.sw-toast.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.sw-toast *,.sw-toast *::before,.sw-toast *::after{box-sizing:border-box}
+.sw-toast i{
+  flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;
+  background:rgba(45,212,191,.14);border:1px solid rgba(45,212,191,.4);
+}
+.sw-toast i::before{
+  content:"";width:11px;height:11px;border-radius:50%;
+  border:2px solid rgba(45,212,191,.35);border-top-color:#2DD4BF;
+  animation:swSpin .9s linear infinite;
+}
+@keyframes swSpin{to{transform:rotate(360deg)}}
+.sw-toast span{flex:1;min-width:0;overflow-wrap:anywhere}
+.sw-toast button{
+  flex:none;font:inherit;font-size:13px;font-weight:650;cursor:pointer;
+  border-radius:10px;padding:8px 14px;transition:.18s;
+}
+.sw-toast .go{border:0;color:#04140F;background:linear-gradient(100deg,#2DD4BF,#6EE7B7)}
+.sw-toast .go:hover{transform:translateY(-1px);box-shadow:0 10px 22px -10px rgba(45,212,191,.6)}
+.sw-toast .x{border:1px solid rgba(30,58,51,.9);background:transparent;color:#93B3A8;padding:8px 10px}
+.sw-toast .x:hover{color:#EAF7F1;border-color:rgba(45,212,191,.45)}
+@media (max-width:520px){
+  .sw-toast{flex-wrap:wrap;gap:10px}
+  .sw-toast span{flex:1 1 100%;order:2}
+  .sw-toast i{order:1}
+  .sw-toast .go{order:3;flex:1}
+  .sw-toast .x{order:4}
+}
+@media (prefers-reduced-motion:reduce){
+  .sw-toast{transition:none}
+  .sw-toast i::before{animation:none}
+}

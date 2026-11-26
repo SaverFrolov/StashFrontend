@@ -158,3 +158,20 @@
   .ob-pop,.ob-badge,.ob-node circle{opacity:1}
   .ob-edge{stroke-dashoffset:0}
 }
+
+/* мобильные: текст не выходит за край */
+.ob-panel,.ob-slide,.ob-copy,.ob-art,.ob-bottom,.ob-meta{min-width:0;max-width:100%}
+.ob-copy h2,.ob-copy p,.ob-chips li,.ob-kicker{overflow-wrap:anywhere;word-break:break-word}
+.ob-chips{max-width:100%}
+.ob-chips li{max-width:100%}
+@media (max-width:860px){
+  .ob-slide{padding:18px 16px 24px;align-content:start}
+  .ob-copy h2{font-size:clamp(21px,6.2vw,28px)}
+  .ob-copy p{font-size:14px}
+  .ob-kicker{flex-wrap:wrap;row-gap:4px}
+  .ob-kicker em{margin-left:0;flex:1 0 100%}
+  .ob-meta{flex-wrap:wrap;row-gap:4px}
+  .ob-bottom{gap:10px}
+  .ob-cta{padding:12px 14px;font-size:13.5px}
+  .ob-dots{gap:7px}
+}
