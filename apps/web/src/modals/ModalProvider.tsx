@@ -6,6 +6,7 @@ import { AddToCollectionDialog } from "./AddToCollectionDialog";
 import { CollectionFormDialog } from "./CollectionFormDialog";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { ExportDialog } from "./ExportDialog";
+import { OnboardingDialog } from "../onboarding/OnboardingDialog";
 import { ProcessingDrawer } from "./ProcessingDrawer";
 import { ReprocessDialog } from "./ReprocessDialog";
 import { MicPermissionDialog } from "./MicPermissionDialog";
@@ -94,6 +95,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         onClose={() => setCollectionForm({ open: false })}
       />
       <ConfirmDialog options={confirm} onClose={closeConfirm} />
+      <OnboardingDialog />
       <ExportDialog
         open={exportOpts.open}
         scope={exportOpts.scope}
