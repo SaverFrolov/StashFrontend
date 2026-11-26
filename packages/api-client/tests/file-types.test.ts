@@ -47,9 +47,30 @@ describe("isAllowedUploadFile", () => {
     expect(isAllowedUploadFile({ name: "movie", type: "video/x-matroska" })).toBe(true);
   });
 
+  it("accepts raster photos", () => {
+    expect(isAllowedUploadFile({ name: "photo.png", type: "image/png" })).toBe(true);
+    expect(isAllowedUploadFile({ name: "photo.jpg", type: "image/jpeg" })).toBe(true);
+    expect(isAllowedUploadFile({ name: "pic.webp", type: "" })).toBe(true);
+    expect(isAllowedUploadFile({ name: "anim.gif", type: "image/gif" })).toBe(true);
+  });
+
   it("rejects everything else", () => {
     expect(isAllowedUploadFile({ name: "notes.txt", type: "text/plain" })).toBe(false);
     expect(isAllowedUploadFile({ name: "app.exe", type: "application/x-msdownload" })).toBe(false);
-    expect(isAllowedUploadFile({ name: "photo.png", type: "image/png" })).toBe(false);
+    expect(isAllowedUploadFile({ name: "icon.svg", type: "image/svg+xml" })).toBe(false);
+    expect(isAllowedUploadFile({ name: "iphone.heic", type: "image/heic" })).toBe(false);
+  });
+});
+
+describe("typeFromMime images", () => {
+  it("detects raster images by mime and extension", () => {
+    expect(typeFromMime("image/png", "photo.png")).toBe("image");
+    expect(typeFromMime("image/jpeg", "photo.jpg")).toBe("image");
+    expect(typeFromMime("", "photo.JPEG")).toBe("image");
+    expect(typeFromMime("", "pic.avif")).toBe("image");
+  });
+
+  it("does not treat SVG as an image item", () => {
+    expect(typeFromMime("image/svg+xml", "icon.svg")).not.toBe("image");
   });
 });

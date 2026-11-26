@@ -315,9 +315,9 @@
   "modals": {
     "uploadTitle": "Upload files",
     "uploadDrop": "Drag files here or click to choose",
-    "uploadAllowed": "PDF, DOCX, audio, video and Excel sheets",
+    "uploadAllowed": "PDF, DOCX, Excel, audio, video and photos (JPG, PNG, GIF, WebP, BMP, AVIF)",
     "uploadComment": "Shared comment (optional)",
-    "uploadInvalidType": "Only PDF, DOCX, audio, video and Excel files are allowed",
+    "uploadInvalidType": "Allowed: PDF, DOCX, Excel, audio, video and photos (JPG, PNG, GIF, WebP, BMP, AVIF)",
     "uploadFailed": "Upload failed",
     "uploadDone": "Uploaded",
     "addToCollectionTitle": "Add to collection",

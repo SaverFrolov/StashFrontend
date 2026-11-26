@@ -323,9 +323,9 @@
   "modals": {
     "uploadTitle": "Загрузка файлов",
     "uploadDrop": "Перетащите файлы сюда или нажмите для выбора",
-    "uploadAllowed": "PDF, DOCX, аудио, видео и таблицы Excel",
+    "uploadAllowed": "PDF, DOCX, Excel, аудио, видео и фото (JPG, PNG, GIF, WebP, BMP, AVIF)",
     "uploadComment": "Общий комментарий (необязательно)",
-    "uploadInvalidType": "Допустимы PDF, DOCX, аудио, видео и таблицы Excel",
+    "uploadInvalidType": "Допустимы PDF, DOCX, Excel, аудио, видео и фото (JPG, PNG, GIF, WebP, BMP, AVIF)",
     "uploadFailed": "Не удалось загрузить",
     "uploadDone": "Загружено",
     "addToCollectionTitle": "Добавить в коллекцию",
