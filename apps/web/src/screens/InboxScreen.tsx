@@ -305,7 +305,7 @@ export function Feed({
           switch — no scroll → height → scroll loop. */}
       <div style={condensed && isDockable ? { height: barHeight || undefined } : undefined}>
         <div
-          ref={barRef}
+          ref={barRef} data-dock="bar"
           className={cn(
             "feed-filter-bar",
             condensed && isDockable

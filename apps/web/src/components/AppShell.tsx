@@ -97,6 +97,7 @@ function AppShellInner() {
 
         {/* Desktop top bar — data-condensed is set when the feed filter bar docks in */}
         <header
+          data-app-header="desktop"
           data-condensed={condensed ? "true" : undefined}
           className={cn(
             "sticky top-0 z-30 hidden h-[var(--header-h)] items-center gap-3 border-b border-glass-border bg-surface px-4 lg:flex",
@@ -144,7 +145,6 @@ function AppShellInner() {
               }}
               className={cn(
                 "hidden h-9 shrink-0 items-center gap-2 rounded-control border border-border-strong bg-surface px-3 text-base font-medium text-text hover:bg-surface-subtle lg:inline-flex",
-                condensed && "mr-3",
               )}
             >
               <Plus size={16} strokeWidth={1.5} aria-hidden />
