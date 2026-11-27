@@ -130,6 +130,9 @@ export class RestApi implements ApiClient {
     if (!this.storage) return;
     if (this.session) this.storage.setItem(SESSION_KEY, JSON.stringify(this.session));
     else this.storage.removeItem(SESSION_KEY);
+    if (typeof window !== "undefined") {
+      try { window.dispatchEvent(new CustomEvent("stash:session")); } catch { /* noop */ }
+    }
   }
 
   private async req<T>(path: string, init?: RequestInit): Promise<T> {

@@ -5,7 +5,32 @@ import { SLIDES, UI, type Lang } from "./copy";
 import { ArtAI, ArtCapture, ArtExport, ArtSearch } from "./arts";
 import "./onboarding.css";
 
-const KEY = "stash.onboarding.v1";
+const BASE_KEY = "stash.onboarding.v1";
+const SESSION_KEY = "stash-session";
+
+function accountKey(): string {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return `${BASE_KEY}:anon`;
+    const s = JSON.parse(raw) as Record<string, any>;
+    const id =
+      s?.user?.id ?? s?.userId ?? s?.user?.email ??
+      (typeof s?.token === "string" ? s.token.slice(-24) : null);
+    return `${BASE_KEY}:${id ?? "anon"}`;
+  } catch {
+    return `${BASE_KEY}:anon`;
+  }
+}
+
+function migrateLegacy(): void {
+  try {
+    if (localStorage.getItem(BASE_KEY) === "1") {
+      const k = accountKey();
+      if (localStorage.getItem(k) === null) localStorage.setItem(k, "1");
+      localStorage.removeItem(BASE_KEY);
+    }
+  } catch { /* приватный режим */ }
+}
 const ARTS = [ArtCapture, ArtAI, ArtSearch, ArtExport];
 
 export function OnboardingDialog() {
@@ -21,6 +46,7 @@ export function OnboardingDialog() {
   const restoreRef = useRef<HTMLElement | null>(null);
   const rafRef = useRef(0);
   const idxRef = useRef(0);
+  const keyRef = useRef(accountKey());
 
   const reduced = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -28,14 +54,31 @@ export function OnboardingDialog() {
   );
 
   const close = useCallback(() => {
-    try { localStorage.setItem(KEY, "1"); } catch { /* приватный режим */ }
+    try { localStorage.setItem(keyRef.current, "1"); } catch { /* приватный режим */ }
     setOpen(false);
   }, []);
 
   useEffect(() => {
-    let seen = false;
-    try { seen = localStorage.getItem(KEY) === "1"; } catch { seen = true; }
-    if (!seen) setOpen(true);
+    migrateLegacy();
+    const evaluate = () => {
+      const k = accountKey();
+      if (k !== keyRef.current) {
+        keyRef.current = k;
+        idxRef.current = 0;
+        setIdx(0);
+        setOpen(false);
+      }
+      let seen = false;
+      try { seen = localStorage.getItem(k) === "1"; } catch { seen = true; }
+      if (!seen) setOpen(true);
+    };
+    evaluate();
+    window.addEventListener("stash:session", evaluate);
+    window.addEventListener("focus", evaluate);
+    return () => {
+      window.removeEventListener("stash:session", evaluate);
+      window.removeEventListener("focus", evaluate);
+    };
   }, []);
 
   useEffect(() => {
@@ -53,7 +96,7 @@ export function OnboardingDialog() {
 
   useLayoutEffect(() => {
     if (!open) return;
-    try { localStorage.setItem(KEY, "1"); } catch { /* ignore */ }
+    try { localStorage.setItem(keyRef.current, "1"); } catch { /* ignore */ }
     restoreRef.current = document.activeElement as HTMLElement | null;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
