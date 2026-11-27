@@ -118,18 +118,22 @@ function AppShellInner() {
           <button
             type="button"
             onClick={openPalette}
+            aria-label={t("common.search")}
+            title={t("common.search")}
             className={cn(
-              "ml-2 h-9 min-w-0 max-w-md flex-1 items-center gap-2 rounded-control border border-accent/40 bg-surface-subtle px-3 text-base text-text-tertiary hover:border-accent",
-              // when the condensed filter bar docks right, the search trigger
-              // yields space below xl to avoid overlapping it
-              condensed ? "hidden xl:flex" : "flex",
+              "ml-2 h-9 min-w-0 items-center rounded-control border border-accent/40 bg-surface-subtle text-base text-text-tertiary transition-[max-width,padding] duration-200 ease-out hover:border-accent",
+              condensed
+                ? "flex w-9 max-w-9 flex-none justify-center px-0"
+                : "flex max-w-md flex-1 gap-2 px-3",
             )}
           >
-            <Search size={16} strokeWidth={1.5} aria-hidden />
-            <span className="truncate">{t("modals.commandPalettePlaceholder")}</span>
-            <kbd className="ml-auto hidden shrink-0 rounded border border-glass-border bg-surface px-1.5 py-0.5 font-mono text-xs text-text-tertiary xl:block">
-              ⌘K
-            </kbd>
+            <Search size={16} strokeWidth={1.5} aria-hidden className="shrink-0" />
+            {!condensed && <span className="truncate">{t("modals.commandPalettePlaceholder")}</span>}
+            {!condensed && (
+              <kbd className="ml-auto hidden shrink-0 rounded border border-glass-border bg-surface px-1.5 py-0.5 font-mono text-xs text-text-tertiary xl:block">
+                ⌘K
+              </kbd>
+            )}
           </button>
           <div className="flex-1" />
           {session && (
@@ -138,7 +142,10 @@ function AppShellInner() {
               onClick={() => {
                 window.dispatchEvent(new CustomEvent("inbox:focus-composer"));
               }}
-              className="hidden h-9 shrink-0 items-center gap-2 rounded-control border border-border-strong bg-surface px-3 text-base font-medium text-text hover:bg-surface-subtle lg:inline-flex"
+              className={cn(
+                "hidden h-9 shrink-0 items-center gap-2 rounded-control border border-border-strong bg-surface px-3 text-base font-medium text-text hover:bg-surface-subtle lg:inline-flex",
+                condensed && "mr-3",
+              )}
             >
               <Plus size={16} strokeWidth={1.5} aria-hidden />
               {t("shell.newNote")}
